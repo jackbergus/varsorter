@@ -54,7 +54,8 @@ int string_key_store_example() {
     uint_fast64_t bene = 23;
 
     // If I have some binary data structure, I can use the iovec structure to provide some data pointer with some
-    // pre-determined data size
+    // pre-determined data size. In this straightforward implementation, it always assumes that the data that is
+    // accessed with [] is appended in the bulk insertion
     struct iovec k;
     k.iov_len = ciao.length();
     k.iov_base = (void *) ciao.c_str();
@@ -81,7 +82,7 @@ int string_key_store_example() {
     v.iov_base = (void *) etu.c_str();
     c.iovec_multiinsert({k,v,});
 
-    // Storing the key-value store
+    // Sorting the key-value store
     c.sortElement();
 
     char keyelems[10], valElems[10];

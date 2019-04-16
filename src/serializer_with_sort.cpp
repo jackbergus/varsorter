@@ -65,7 +65,9 @@ int serializer_with_sort::update(void *old, uint_fast64_t oldLen, void *neu, uin
     } else {
         virtual_sorter::iterator ptr = searchFor(old, oldLen); // c is closed
         const virtual_sorter::iterator &enn = end();
+        // If the pointer points to the end (the old element is not there)
         if (ptr == enn) {
+            // Then I just insert the new value
             return risk_insert(neu, newLen) ? 0 : -1;
         }
 
@@ -97,21 +99,24 @@ int serializer_with_sort::update(virtual_sorter::iterator &iterator, void *pVoid
 int serializer_with_sort::update_internal(virtual_sorter::iterator& ptr, void *neu, unsigned long newLen) {
     hasInserted = true;
     hasRiskInsert = true;
-    hasSorted = false;
+    hasSorted = false; // If I now need to further search, the data is no more sorted
 
-    // else
+    // If the new value is shorter than the previous one, then I can overwrite the old information with this new one.
     if (ptr->iov_len >= newLen) {
         ptr.setNewLen(newLen);
         sorter->risk_overwrite(ptr->iov_base, neu, newLen); // c is closed
+        // Do nothing else, and return.
         return 1;
     }
 
-    // else
+    // update the index definition with the pointer to thne new data
     ptr.updateWith(sorter->mmap_index_File[sorter->struct_index_size / sizeof(struct index) - 1].end, newLen);
-    //ptr->begin = sorter->mmap_index_File[sorter->struct_index_size / sizeof(struct index) - 1].end;
-    //ptr->end = ptr->begin + newLen;
+
+    // I must close the sorted, because it must be reopened only when required
     sorter->doclose();
+    // Opens both the index and the values in append mode
     c.open(index, values);
+    // Add the data at the end of the file (that is, after opening that in append mode).
     c.risk_writeKeyAndValue_noindex(neu, newLen);
     return 2;
 }

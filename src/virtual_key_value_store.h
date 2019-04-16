@@ -31,34 +31,17 @@
 
 #include "virtual_sorter.h"
 #include "serializer_with_sort.h"
+#include "smart_malloc.h"
 
+/**
+ * This initial offset is the initial size for storing the key and the value within the same block within the value index
+ */
 #define INITIAL_OFFSET              (sizeof(uint_fast64_t)*2)
 
 #define ABSTRACT_CLASS              class
 #define ABSTRACT                    virtual
 
-/**
- * Providing a modern C++ definition of the iovec structure. In particular, this is give with respect to the implementation
- * of the constructor
- */
-struct new_iovec {
-    /**
-     * Pointer to the data to be serialized
-     */
-    void* iov_base;
-    /**
-     * Sizoe of the pointed data.
-     */
-    uint_fast64_t iov_len;
-    new_iovec() : iov_base{nullptr}, iov_len{0} {}
-    new_iovec(void *memory, uint_fast64_t size);
-    new_iovec(int* singleNum) : new_iovec{singleNum, sizeof(int)} {}
-    new_iovec(std::string& str) : new_iovec{(void*)str.c_str(), str.length()} {}
-    new_iovec(uint_fast64_t* singleNum) : new_iovec{singleNum, sizeof(singleNum)} {}
 
-    // Utility method to use when the data needs to be written in secondary memory
-    std::istringstream stream();
-};
 
 /**
  * This class allows to store the data in secondary memory by just providing the following semplifications and assumptions:
@@ -67,6 +50,9 @@ struct new_iovec {
  *
  */
 ABSTRACT_CLASS virtual_key_value_store : public virtual_sorter, public serializer_with_sort {
+    // Destructed by default when destructing the class'object -- freeing the memory
+    smart_malloc malloced;
+
 public:
     virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile);
 
@@ -90,6 +76,10 @@ public:
      */
     int compare(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size);
 
+    /**
+     * This class is the actually the one providing the implementation to the ``vector base'' access abstraction for the
+     * key-value store. In particular, it provides both getters and setters for the
+     */
     struct Deref {
         virtual_key_value_store* a;
         struct new_iovec key;
@@ -97,24 +87,23 @@ public:
 
         Deref(virtual_key_value_store* a, std::string& index);
 
-        explicit operator struct iovec*() {
-            //getter
-            return *a->searchFor(key.iov_base, key.iov_len);
-        }
+        /**
+         * This is actually the getter: it uses the binary search for getting the required element. Please note that the
+         * search
+         *
+         * @return
+         */
+        explicit operator struct iovec*();
 
         void operator=(const struct iovec& value);
-
         void operator=(std::string& value);
-
         void operator=(uint_fast64_t& value);
     };
 
     iterator begin();
-
     iterator end();
 
     Deref operator[](struct iovec& index);
-
     Deref operator[](std::string& index);
 
 };

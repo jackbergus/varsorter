@@ -65,56 +65,42 @@ virtual_key_value_store::Deref::Deref(virtual_key_value_store *a, std::string &i
 }
 
 void virtual_key_value_store::Deref::operator=(const struct iovec &value) {
-    //setter
-    //size_t keyMallocd = INITIAL_OFFSET + key.iov_len;
+    // The final size is the size for the initial offset, and the length of the two values
     size_t keyValMallocd = INITIAL_OFFSET + key.iov_len + value.iov_len;
-
-    //uint_fast64_t* kPtr = (uint_fast64_t*)malloc(keyMallocd);
-    uint_fast64_t* kvPtr = (uint_fast64_t*)malloc(keyValMallocd);
-
-
+    // Allocating enough main memory for writing the data
+    uint_fast64_t* kvPtr = (uint_fast64_t*)a->malloced.domalloc(keyValMallocd);
+    // The first element tells the size of the key
     kvPtr[0] = key.iov_len;
+    // The second element tells the size of the value
     kvPtr[1] = value.iov_len;
-
+    // Copies the information in the temporary allocated buffer
     memcpy(((char*)kvPtr)+INITIAL_OFFSET, key.iov_base, key.iov_len);
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, value.iov_base, value.iov_len);
 
-
     a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
-
-    free(kvPtr);
+    //free(kvPtr);
 }
 
 void virtual_key_value_store::Deref::operator=(std::string &value) {
     //setter
-    //size_t keyMallocd = INITIAL_OFFSET + key.iov_len;
     size_t keyValMallocd = INITIAL_OFFSET + key.iov_len + value.length();
-
-    //uint_fast64_t* kPtr = (uint_fast64_t*)malloc(keyMallocd);
-    uint_fast64_t* kvPtr = (uint_fast64_t*)malloc(keyValMallocd);
-
+    uint_fast64_t* kvPtr = (uint_fast64_t*)a->malloced.domalloc(keyValMallocd);
 
     kvPtr[0] = key.iov_len;
     kvPtr[1] = value.length();
 
-
-
     memcpy(((char*)kvPtr)+INITIAL_OFFSET, key.iov_base, key.iov_len);
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, value.c_str(), value.length());
 
-
     a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
 
-    free(kvPtr);
+    //free(kvPtr);
 }
 
 void virtual_key_value_store::Deref::operator=(uint_fast64_t &value) {
     //setter
-    //size_t keyMallocd = INITIAL_OFFSET + key.iov_len;
     size_t keyValMallocd = INITIAL_OFFSET + key.iov_len + sizeof(uint_fast64_t);
-
-    //uint_fast64_t* kPtr = (uint_fast64_t*)malloc(keyMallocd);
-    uint_fast64_t* kvPtr = (uint_fast64_t*)malloc(keyValMallocd);
+    uint_fast64_t* kvPtr = (uint_fast64_t*)a->malloced.domalloc(keyValMallocd);
 
 
     kvPtr[0] = key.iov_len;
@@ -123,15 +109,12 @@ void virtual_key_value_store::Deref::operator=(uint_fast64_t &value) {
     memcpy(((char*)kvPtr)+INITIAL_OFFSET, key.iov_base, key.iov_len);
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, &value, sizeof(uint_fast64_t));
 
-
     a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
 
-    free(kvPtr);
+    //free(kvPtr);
 }
 
-new_iovec::new_iovec(void *memory, size_t size) : iov_base(memory), iov_len(size) {}
-
-std::istringstream new_iovec::stream() {
-    std::string elem2{(char*)iov_base,iov_len};
-    return std::istringstream(elem2);
+virtual_key_value_store::Deref::operator struct iovec *() {
+    //getter
+    return *a->searchFor(key.iov_base, key.iov_len);
 }

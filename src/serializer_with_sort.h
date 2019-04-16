@@ -41,6 +41,16 @@ class serializer_with_sort {
     bool hasRiskInsert = false;
     bool hasSorted = false;
 
+    /**
+     * Updates the old key internally.
+     *
+     * @param ptr       Pointer to the old data memory location
+     * @param neu       Pointer to the new data to serialize
+     * @param newLen    Length of the pointed data
+     * @return          1 if the old value has been overwritten, and 2 if only the old index has been overwritten but the
+     *                  old value appended at the end of the file
+     */
+    int update_internal(virtual_sorter::iterator &ptr, void *neu, unsigned long newLen);
 public:
     virtual_sorter* sorter;
     serializer_with_sort(std::string indexFile, std::string valuesFile);
@@ -55,6 +65,8 @@ public:
     virtual_sorter::iterator searchFor(void* buff, uint_fast64_t len);
 
     /**
+     * This method either inserts (old or oldLen are false) or updates the previous entry old with length oldLen with neu and newLen
+     *
      *
      * @param old       Old key to be searched for
      * @param oldLen    Length of the key
@@ -68,12 +80,9 @@ public:
     int update(void* old, uint_fast64_t oldLen, void* neu, uint_fast64_t newLen);
 
     virtual_sorter::iterator begin();
-
     virtual_sorter::iterator end();
 
     int update(virtual_sorter::iterator &iterator, void *pVoid, unsigned long i);
-
-    int update_internal(virtual_sorter::iterator &ptr, void *neu, unsigned long newLen);
 };
 
 

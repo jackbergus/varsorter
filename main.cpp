@@ -37,7 +37,7 @@ int main() {
     std::cerr << "..." << std::endl;
     // This provides an example of how to serialize values without explicit indexing data structures (key)
     // These will be only be provided for traversing the mutable data.
-    //serialze_with_sort_example();
+    serialze_with_sort_example();
 
     std::cerr << "second example (sleep 3)" ;
     sleep(3);
