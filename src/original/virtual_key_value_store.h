@@ -32,15 +32,12 @@
 #include "virtual_sorter.h"
 #include "serializer_with_sort.h"
 #include "smart_malloc.h"
+#include "java_utils.h"
 
 /**
  * This initial offset is the initial size for storing the key and the value within the same block within the value index
  */
 #define INITIAL_OFFSET              (sizeof(uint_fast64_t)*2)
-
-#define ABSTRACT_CLASS              class
-#define ABSTRACT                    virtual
-
 
 
 /**

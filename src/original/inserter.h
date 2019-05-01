@@ -31,10 +31,13 @@
 #include "index.h"
 #include <string>
 #include <fstream>
+#include <string>
+#include <sstream>
+#include <bits/types/struct_iovec.h>
 
 class inserter {
-    uint_fast64_t currentOffset;
     struct index toSerialize;
+    std::string file, index;
 
 public:
     FILE* fdIndex;
@@ -45,7 +48,10 @@ public:
     void open(std::string indexFile, std::string kvFile);
 
     void close();
+    void dounlink();
 
+    void writeKeyAndValue(struct new_iovec& );
+    void writeKeyAndValue(struct iovec& );
     void writeKeyAndValue(void* mem, uint_fast64_t size);
     void risk_writeKeyAndValue_noindex(void* mem, uint_fast64_t size);
     void risk_writeKeyAndValue_with_prev(void *mem, uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size);

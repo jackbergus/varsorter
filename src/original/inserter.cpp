@@ -24,6 +24,11 @@
 
 
 #include "inserter.h"
+#include "new_iovec.h"
+
+extern "C" {
+#include <unistd.h>
+}
 
 inserter::inserter() {
     toSerialize.begin = 0;
@@ -36,6 +41,8 @@ void inserter::open(std::string indexFile, std::string kvFile) {
     close();
     fdIndex = fopen(indexFile.c_str(), "a+");
     fdKeyValueStorage = fopen(kvFile.c_str(), "a+");
+    index = indexFile;
+    file = kvFile;
 }
 
 void inserter::close() {
@@ -75,4 +82,18 @@ inserter::~inserter() {
 
 void inserter::risk_writeKeyAndValue_noindex(void *mem, uint_fast64_t size) {
     fwrite(mem, size, 1, fdKeyValueStorage);
+}
+
+void inserter::writeKeyAndValue(struct new_iovec &x) {
+    writeKeyAndValue(x.iov_base, x.iov_len);
+}
+
+void inserter::writeKeyAndValue(struct iovec &x) {
+    writeKeyAndValue(x.iov_base, x.iov_len);
+}
+
+void inserter::dounlink() {
+    close();
+    unlink(file.c_str());
+    unlink(index.c_str());
 }

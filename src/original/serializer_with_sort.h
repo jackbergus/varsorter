@@ -28,13 +28,13 @@
 #include <iostream>
 #include <cstring>
 
+#include "new_iovec.h"
 #include "virtual_sorter.h"
 #include "inserter.h"
 
 #include <initializer_list>
 
 class serializer_with_sort {
-    inserter c;
     std::string index;
     std::string values;
     bool hasInserted = false;
@@ -52,13 +52,16 @@ class serializer_with_sort {
      */
     int update_internal(virtual_sorter::iterator &ptr, void *neu, unsigned long newLen);
 public:
-    virtual_sorter* sorter;
+    inserter c;
+    virtual_sorter* sorter = nullptr;
     serializer_with_sort(std::string indexFile, std::string valuesFile);
     ~serializer_with_sort();
 
+    bool risk_insert(struct iovec& ptr);
     bool risk_insert(void* buff, uint_fast64_t len);
 
     void sortElement();
+    void unlink();
 
     bool iovec_multiinsert(std::initializer_list<struct iovec> list);
 
@@ -78,6 +81,8 @@ public:
      *                  -1 - error during the insertion
      */
     int update(void* old, uint_fast64_t oldLen, void* neu, uint_fast64_t newLen);
+    int insert(void* neu, uint_fast64_t len);
+    int insert(struct new_iovec& x);
 
     virtual_sorter::iterator begin();
     virtual_sorter::iterator end();

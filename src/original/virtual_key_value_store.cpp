@@ -93,7 +93,6 @@ void virtual_key_value_store::Deref::operator=(std::string &value) {
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, value.c_str(), value.length());
 
     a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
-
     //free(kvPtr);
 }
 
@@ -110,7 +109,6 @@ void virtual_key_value_store::Deref::operator=(uint_fast64_t &value) {
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, &value, sizeof(uint_fast64_t));
 
     a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
-
     //free(kvPtr);
 }
 

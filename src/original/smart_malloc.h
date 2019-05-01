@@ -23,6 +23,9 @@
 #ifndef VARSORTER_SMART_MALLOC_H
 #define VARSORTER_SMART_MALLOC_H
 
+#include <bits/types/struct_iovec.h>
+#include <cstring>
+#include <iostream>
 #include "new_iovec.h"
 
 /**
@@ -32,6 +35,25 @@
 class smart_malloc {
 public:
     struct new_iovec malloced_iovec;
+    bool moved;
+
+    smart_malloc();
+
+    /**
+     * In order to use gnu's sort using the move semantics, it is required to
+     * @param element
+     */
+    //smart_malloc(smart_malloc&& element);
+
+    //smart_malloc(smart_malloc& element);
+
+
+    /**
+     * Part used jointly with the move assignment for setting another field to another value
+     * @param rhs
+     * @return
+     */
+    //smart_malloc& operator=(smart_malloc const &rhs);
 
     /**
      * If this is the first time allocating memory, then it will call the malloc. If this otherwise is the second
@@ -44,10 +66,27 @@ public:
     void* domalloc(size_t size);
 
     /**
+     * This function copies the memory from the iovec and uses the domalloc to same memory reallocation time
+     * @param toCopy
+     * @return
+     */
+    void docopy(struct iovec& toCopy);
+    void docopy(struct iovec* toCopy);
+
+
+
+    /**
      * Desctructor taking care of freeing the memory
      */
     ~smart_malloc();
 };
+
+/**
+ * While swapping, I do not need to set the moved to false.
+ * @param lhs
+ * @param rhs
+ */
+void swap(smart_malloc& lhs, smart_malloc& rhs);
 
 
 #endif //VARSORTER_SMART_MALLOC_H

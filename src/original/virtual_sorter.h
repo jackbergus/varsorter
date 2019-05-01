@@ -28,11 +28,11 @@
 
 #include "mmapFile.h"
 #include "index.h"
+#include "java_utils.h"
 
 class virtual_sorter {
     int fdmif;
 
-    uint_fast64_t data_serialized_file;
     char* mmap_kv_File;
     int fdkvf;
 
@@ -45,11 +45,22 @@ class virtual_sorter {
 public:
     struct index* mmap_index_File;
     uint_fast64_t struct_index_size;
+    uint_fast64_t data_serialized_file;
 
     virtual_sorter();
     void openvirtual_sorter(std::string indexFile, std::string kvFile);
     void doclose();
-    virtual int compare(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size) = 0;
+
+    /**
+     * This function compares the values, probably key and value, that are serialized in secondary memory.
+     *
+     * @param lhs           Pointer to the left memory address
+     * @param lhs_size      Size of the left memory
+     * @param rhs           Pointer to the right memory address
+     * @param rhs_size      Size of the right memory
+     * @return              Standard int comparison value (0 equiv, 1 greater, -1 less)
+     */
+    int compare(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size) { return 0; };
     void sortPair();
     ~virtual_sorter();
     void printIndex();

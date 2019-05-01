@@ -33,7 +33,6 @@
     }\
 
 uint_fast64_t virtual_sorter::partition(struct index *arr, const uint_fast64_t left, const uint_fast64_t right) {
-
     void* pivotElement = mmap_kv_File+arr[right].begin;
     uint_fast64_t pivotElementSize = arr[right].end - arr[right].begin;
     uint_fast64_t i = left - 1;
@@ -179,32 +178,6 @@ virtual_sorter::iterator virtual_sorter::end() const {
     return iterator(mmap_index_File, struct_index_size / sizeof(struct index) - 1, struct_index_size / sizeof(struct index), mmap_kv_File);
 }
 
-/*void virtual_sorter::quicksort2(struct index *arr, uint_fast64_t len) {
-    constexpr uint_fast64_t LEN2 = 2;
-    if (len < LEN2) return;
-
-    uint_fast64_t mid = len / LEN2;
-    //int pivot = A[len / 2];
-
-    uint_fast64_t i, j;
-    for (i = 0, j = len - 1; ; i++, j--) {
-        while (compare(mmap_kv_File+arr[i].begin, arr[i].end - arr[i].begin, mmap_kv_File+arr[mid].begin, arr[mid].end - arr[mid].begin) < 0) i++;
-        while (compare(mmap_kv_File+arr[j].begin, arr[j].end - arr[j].begin, mmap_kv_File+arr[mid].begin, arr[mid].end - arr[mid].begin) < 0) j--;
-
-        if (i >= j) break;
-
-
-        uint_fast64_t alb = arr[j].begin;
-        uint_fast64_t ale = arr[j].end;
-        arr[j].begin = arr[i].begin;
-        arr[j].end = arr[i].end;
-        arr[i].begin = alb;
-        arr[i].end = ale;
-    }
-
-    quicksort2(arr, i);
-    quicksort2(arr + i, len - i);
-}*/
 virtual_sorter::iterator::iterator(struct index *mmap_index_File, uint_fast64_t end_index, uint_fast64_t index,
                                    char *mmap_kv_File) : mmap_index_File(mmap_index_File), end_index(end_index),
                                                          index(index), mmap_kv_File(mmap_kv_File) {}

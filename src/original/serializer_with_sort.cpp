@@ -20,7 +20,7 @@
  * along with varsorter. If not, see <http://www.gnu.org/licenses/>.
  */
 
- 
+
 
 #include "serializer_with_sort.h"
 
@@ -79,7 +79,7 @@ int serializer_with_sort::update(void *old, uint_fast64_t oldLen, void *neu, uin
 virtual_sorter::iterator serializer_with_sort::begin() {
     if (hasRiskInsert) {
         c.close();
-        sorter->openIfRequired(index, values);
+        if (sorter) sorter->openIfRequired(index, values);
     }
     return sorter->begin();
 }
@@ -135,7 +135,9 @@ virtual_sorter::iterator serializer_with_sort::searchFor(void *buff, uint_fast64
 
 serializer_with_sort::~serializer_with_sort() {
     c.close();
-    sorter->doclose();
+    if (sorter)
+        sorter->doclose();
+    sorter = nullptr;
 }
 
 bool serializer_with_sort::iovec_multiinsert(std::initializer_list<struct iovec> list) {
@@ -171,5 +173,24 @@ bool serializer_with_sort::iovec_multiinsert(std::initializer_list<struct iovec>
         i++;
     }
     return hasInserted && hasRiskInsert;
+}
+
+bool serializer_with_sort::risk_insert(struct iovec &ptr) {
+    return risk_insert(ptr.iov_base, ptr.iov_len);
+}
+
+int serializer_with_sort::insert(struct new_iovec &x) {
+    return insert(x.iov_base, x.iov_len);
+}
+
+int serializer_with_sort::insert(void *ptr, uint_fast64_t len) {
+    return update(nullptr, 0, ptr, len);
+}
+
+void serializer_with_sort::unlink() {
+    c.dounlink();
+    if (sorter)
+        sorter->doclose();
+    sorter = nullptr;
 }
 

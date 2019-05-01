@@ -1,0 +1,14 @@
+//
+// Created by giacomo on 01/05/19.
+//
+
+#ifndef VARSORTER_QUICKSORTCOMPARATORTEST_H
+#define VARSORTER_QUICKSORTCOMPARATORTEST_H
+
+
+class QuicksortComparatorTest {
+
+};
+
+
+#endif //VARSORTER_QUICKSORTCOMPARATORTEST_H
