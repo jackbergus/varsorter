@@ -22,14 +22,14 @@
 
  
 
-#include "../src/virtual_sorter.h"
-#include "../src/serializer_with_sort.h"
+#include "../src/original/virtual_sorter.h"
+#include "../src/original/serializer_with_sort.h"
 
 class string_sorter : public virtual_sorter {
 public:
     string_sorter() : virtual_sorter() {}
 
-    int compare(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) override {
+    int compare(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         int toret = strncmp(static_cast<const char *>(lhs), static_cast<const char *>(rhs), lhs_size < rhs_size ? lhs_size : rhs_size);
         if (lhs_size == rhs_size)
             return toret;
@@ -47,7 +47,7 @@ public:
  */
 #define write_string2(c,x)  c.risk_insert((void*)x.c_str(),x.length())
 
-void serialze_with_sort_example() {
+int main() {
     // File that will contain the values
     std::string file1 = "valori_di_stringa.txt";
     // Index where the offsets to the strings will be inserted

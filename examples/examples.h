@@ -2,9 +2,7 @@
  * examples.h
  * This file is part of varsorter
  *
- * Copyright (C) 2017 - Giacomo Bergami
- *
- * Created on 11/08/17
+ * Copyright (C) 2019 - Giacomo Bergami
  *
  * varsorter is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with varsorter. If not, see <http://www.gnu.org/licenses/>.
  */
-
-	
-
 #ifndef VARSORTER_EXAMPLES_H
 #define VARSORTER_EXAMPLES_H
 

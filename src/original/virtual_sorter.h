@@ -31,13 +31,14 @@
 #include "java_utils.h"
 
 class virtual_sorter {
+protected:
     int fdmif;
 
     char* mmap_kv_File;
     int fdkvf;
 
     bool isOpen = false;
-    std::string bulkFile;
+    std::string bulkFile, indexFile;
 
     uint_fast64_t partition(struct index *arr, const uint_fast64_t left, const uint_fast64_t right);
     void quicksort(struct index *arr, uint_fast64_t left, uint_fast64_t right);

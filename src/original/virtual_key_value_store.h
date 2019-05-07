@@ -33,6 +33,7 @@
 #include "serializer_with_sort.h"
 #include "smart_malloc.h"
 #include "java_utils.h"
+#include "../../external_merge_sort/external_merge_sort.h"
 
 /**
  * This initial offset is the initial size for storing the key and the value within the same block within the value index

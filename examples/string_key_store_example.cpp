@@ -22,7 +22,7 @@
 
  
 
-#include "../src/virtual_key_value_store.h"
+#include "../src/original/virtual_key_value_store.h"
 
 /**
  * Using a custom way to define a comparator, without associating an external comparator.
@@ -43,7 +43,7 @@ public:
 
 };
 
-int string_key_store_example() {
+int main() {
     unlink("index2.bin");
     unlink("keyvalue.bin");
     string_kvcmp c{"index2.bin","keyvalue.bin"};

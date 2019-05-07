@@ -101,6 +101,7 @@ void virtual_sorter::openIfRequired(std::string indexFile, std::string kvFile) {
     if (!isOpen) {
         doclose();
         bulkFile = kvFile;
+        this->indexFile = indexFile;
         mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fdkvf);
         mmap_index_File = (struct index*)mmapFile(indexFile, &struct_index_size, &fdmif);
         isOpen = true;
@@ -112,6 +113,7 @@ void virtual_sorter::openvirtual_sorter(std::string indexFile, std::string kvFil
         doclose();
     }
     bulkFile = kvFile;
+    this->indexFile = indexFile;
     mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fdkvf);
     mmap_index_File = (struct index*)mmapFile(indexFile, &struct_index_size, &fdmif);
     isOpen = true;
