@@ -19,5 +19,4 @@ This library was ment to overcome two of the major problems in current C++ libra
 This implementation is quite straightforward, and can be refactored and made more efficient as it actually is right now.
 
 ## TODO (?) List:
-1. Provide the current code as a installable C++ library. Currently it is only provided as a binary.
-2. Some additional unit testing to provide the correctness of the implementation should be provided, too.
+1. Some additional unit testing to provide the correctness of the implementation should be provided, too.
