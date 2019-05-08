@@ -24,7 +24,7 @@
 #ifndef VARSORTER_KEYVALUESTORE_H
 #define VARSORTER_KEYVALUESTORE_H
 
-
+#include <cstdio>
 #include "original/virtual_key_value_store.h"
 
 /**
@@ -42,6 +42,8 @@ public:
     size_t runSize =      1000000;
     KeyValueStore(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
                                                                                                         valuesFile) {}
+
+    KeyValueStore() : KeyValueStore{std::tmpnam(nullptr), std::tmpnam(nullptr)} {}
 
     int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         keyComparator.compareKeys(lhs, lhs_size,rhs, rhs_size);
