@@ -28,6 +28,11 @@ virtual_key_value_store::virtual_key_value_store(const std::string &indexFile, c
     this->sorter = this;
 }
 
+virtual_key_value_store::virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile) :
+        serializer_with_sort(fixed_size, valuesFile), virtual_sorter{} {
+    this->sorter = this;
+}
+
 int virtual_key_value_store::compare(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
     auto* lptr = (uint_fast64_t*)lhs;
     auto* rptr = (uint_fast64_t*)rhs;
@@ -124,8 +129,6 @@ void virtual_key_value_store::Deref::operator=(uint_fast64_t &value) {
     a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
     //free(kvPtr);
 }
-
-
 
 virtual_key_value_store::Deref::operator struct iovec *() {
     //getter

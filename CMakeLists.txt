@@ -30,7 +30,7 @@ ADD_LIBRARY(libvarsorter STATIC
             external_merge_sort/ExternalULongKeyComparator.cpp
             external_merge_sort/ExternalULongKeyComparator.h
             src/KeyValueStore.h
-        )
+        src/original/smart_index_pointer.cpp src/original/smart_index_pointer.h src/original/index.cpp)
 
 set(EXTERNAL_MERGE_SORT_FILES   )
 

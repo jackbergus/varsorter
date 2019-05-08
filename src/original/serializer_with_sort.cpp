@@ -24,7 +24,14 @@
 
 #include "serializer_with_sort.h"
 
-serializer_with_sort::serializer_with_sort(std::string indexFile, std::string valuesFile) : index{indexFile}, values{valuesFile} {}
+serializer_with_sort::serializer_with_sort(std::string indexFile, std::string valuesFile) : index{indexFile}, values{valuesFile}, c{} {
+    fixed_size = 0L;
+    isFixedSize = false;
+}
+
+serializer_with_sort::serializer_with_sort(uint_fast64_t fixed_size, std::string valuesFile) : fixed_size{fixed_size}, values{valuesFile}, c{fixed_size} {
+    isFixedSize = true;
+}
 
 bool serializer_with_sort::risk_insert(void *buff, uint_fast64_t len) {
     if (buff != nullptr && len != 0) {
@@ -35,10 +42,10 @@ bool serializer_with_sort::risk_insert(void *buff, uint_fast64_t len) {
         if (hasInserted) {
             if (!hasRiskInsert) {
                 sorter->doclose();
-                c.open(index,values);
+                c.open(index,values); // fixed_size aware
             }
         } else {
-            c.open(index, values);
+            c.open(index, values);  // fixed_size aware
         }
         c.writeKeyAndValue(buff, len);
         hasInserted = true;
@@ -53,7 +60,10 @@ void serializer_with_sort::sortElement() {
         c.close();
         hasInserted = false;
         hasRiskInsert = false;
-        sorter->openvirtual_sorter(index, values);
+        if (isFixedSize)
+            sorter->openvirtual_sorter(fixed_size, values);
+        else
+            sorter->openvirtual_sorter(index, values);
         sorter->sortPair();
         hasSorted = true;
     }
@@ -79,7 +89,12 @@ int serializer_with_sort::update(void *old, uint_fast64_t oldLen, void *neu, uin
 virtual_sorter::iterator serializer_with_sort::begin() {
     if (hasRiskInsert) {
         c.close();
-        if (sorter) sorter->openIfRequired(index, values);
+        if (sorter) {
+            if (isFixedSize)
+                sorter->openvirtual_sorter(fixed_size, values);
+            else
+                sorter->openIfRequired(index, values);
+        }
     }
     return sorter->begin();
 }
@@ -87,7 +102,12 @@ virtual_sorter::iterator serializer_with_sort::begin() {
 virtual_sorter::iterator serializer_with_sort::end() {
     if (hasRiskInsert) {
         c.close();
-        sorter->openIfRequired(index, values);
+        if (sorter) {
+            if (isFixedSize)
+                sorter->openvirtual_sorter(fixed_size, values);
+            else
+                sorter->openIfRequired(index, values);
+        }
     }
     return sorter->end();
 }
@@ -102,8 +122,8 @@ int serializer_with_sort::update_internal(virtual_sorter::iterator& ptr, void *n
     hasSorted = false; // If I now need to further search, the data is no more sorted
 
     // If the new value is shorter than the previous one, then I can overwrite the old information with this new one.
-    if (ptr->iov_len >= newLen) {
-        ptr.setNewLen(newLen);
+    if ((isFixedSize) || (ptr->iov_len >= newLen)) {
+        if (!isFixedSize) ptr.setNewLen(newLen);
         sorter->risk_overwrite(ptr->iov_base, neu, newLen); // c is closed
         // Do nothing else, and return.
         return 1;
@@ -115,7 +135,7 @@ int serializer_with_sort::update_internal(virtual_sorter::iterator& ptr, void *n
     // I must close the sorted, because it must be reopened only when required
     sorter->doclose();
     // Opens both the index and the values in append mode
-    c.open(index, values);
+    c.open(index, values);  // fixed_size aware
     // Add the data at the end of the file (that is, after opening that in append mode).
     c.risk_writeKeyAndValue_noindex(neu, newLen);
     return 2;
@@ -149,10 +169,10 @@ bool serializer_with_sort::iovec_multiinsert(std::initializer_list<struct iovec>
     if (hasInserted) {
         if (!hasRiskInsert) {
             sorter->doclose();
-            c.open(index,values);
+            c.open(index,values);  // fixed_size aware
         }
     } else {
-        c.open(index, values);
+        c.open(index, values);  // fixed_size aware
     }
     unsigned long lsize = list.size(), i = 0;
     for (auto elem : list) {

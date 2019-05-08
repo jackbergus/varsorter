@@ -40,6 +40,8 @@ class serializer_with_sort {
     bool hasInserted = false;
     bool hasRiskInsert = false;
     bool hasSorted = false;
+    bool isFixedSize = false;
+    uint_fast64_t fixed_size = 0;
 
     /**
      * Updates the old key internally.
@@ -55,6 +57,7 @@ public:
     inserter c;
     virtual_sorter* sorter = nullptr;
     serializer_with_sort(std::string indexFile, std::string valuesFile);
+    serializer_with_sort(uint_fast64_t fixed_size, std::string valuesFile);
     ~serializer_with_sort();
 
     bool risk_insert(struct iovec& ptr);

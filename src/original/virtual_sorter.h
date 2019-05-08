@@ -29,27 +29,36 @@
 #include "mmapFile.h"
 #include "index.h"
 #include "java_utils.h"
+#include "smart_index_pointer.h"
+#include "smart_malloc.h"
 
 class virtual_sorter {
 protected:
     int fdmif;
+    bool isFixedSize;
+    uint_fast64_t fixed_size;
 
-    char* mmap_kv_File;
+    char* mmap_kv_File = nullptr;
     int fdkvf;
 
     bool isOpen = false;
     std::string bulkFile, indexFile;
 
-    uint_fast64_t partition(struct index *arr, const uint_fast64_t left, const uint_fast64_t right);
-    void quicksort(struct index *arr, uint_fast64_t left, uint_fast64_t right);
+    smart_index_pointer ptr_arr;
+    smart_malloc ptr_mem_tmp;
+
+
+    uint_fast64_t partition(const uint_fast64_t left, const uint_fast64_t right);
+    void quicksort(uint_fast64_t left, uint_fast64_t right);
 
 public:
-    struct index* mmap_index_File;
+    struct index* mmap_index_File = nullptr;
     uint_fast64_t struct_index_size;
     uint_fast64_t data_serialized_file;
 
     virtual_sorter();
     void openvirtual_sorter(std::string indexFile, std::string kvFile);
+    void openvirtual_sorter(uint_fast64_t fixed_size, std::string kvFile);
     void doclose();
 
     /**
@@ -67,15 +76,37 @@ public:
     void printIndex();
 
     class iterator {
+
         struct index* mmap_index_File;
-        uint_fast64_t end_index;
-        uint_fast64_t index;
+        uint_fast64_t last_element_pos;
+        uint_fast64_t curr_vect_pos;
         char* mmap_kv_File;
         struct iovec current;
+        bool isFixedSize;
+        uint_fast64_t fixed_size;
 
     public:
+        /**
+         * Implementation of the default empty iterator
+         */
         iterator();
+
+        /**
+         * Iterator of a secondary memory object having no fixed size struture, and therefore requiring a
+         * @param mmap_index_File
+         * @param end_index
+         * @param index
+         * @param mmap_kv_File
+         */
         iterator(struct index *mmap_index_File, uint_fast64_t end_index, uint_fast64_t index, char *mmap_kv_File);
+
+
+        iterator(uint_fast64_t data_block_size, uint_fast64_t end_index, uint_fast64_t index, char *mmap_kv_File);
+
+        /**
+         * Copying an iterator
+         * @param cp
+         */
         iterator(const iterator& cp);
         iterator& operator=(const iterator& elem);
         bool operator==(const iterator &rhs) const;
@@ -98,6 +129,7 @@ public:
 
     void risk_overwrite(void *i, void *pVoid, uint_fast64_t i1);
     void openIfRequired(std::string indexFile, std::string kvFile);
+    void openIfRequired(uint_fast64_t fixed_size, std::string kvFile);
 };
 
 

@@ -1,10 +1,10 @@
 /*
- * index.h
+ * index.cpp
  * This file is part of varsorter
  *
- * Copyright (C) 2017 - Giacomo Bergami
+ * Copyright (C) 2019 - Giacomo Bergami
  *
- * Created on 10/08/17
+ * Created on 8/05/19
  *
  * varsorter is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,24 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with varsorter. If not, see <http://www.gnu.org/licenses/>.
  */
+//
+// Created by giacomo on 08/05/19.
+//
 
+#include "index.h"
 
-
-#ifndef VARSORTER_INDEX_H
-#define VARSORTER_INDEX_H
-
-#include <cstdint>
-
-/**
- * This data structure provides the
- */
-struct index {
-    uint_fast64_t begin;
-    uint_fast64_t end;
-
-    index();
-
-    index(uint_fast64_t begin, uint_fast64_t end);
-};
-
-#endif //VARSORTER_INDEX_H
+index::index() {}
+index::index(uint_fast64_t begin, uint_fast64_t end) : begin(begin), end(end) {}

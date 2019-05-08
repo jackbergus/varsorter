@@ -36,15 +36,27 @@
 #include <bits/types/struct_iovec.h>
 
 class inserter {
+    inserter(uint_fast64_t fixed_size, bool isFixedSize);
+
     struct index toSerialize;
     std::string file, index;
+    bool hasFixedSizeInput;
+    uint_fast64_t fixed_size;
 
 public:
     FILE* fdIndex;
     FILE* fdKeyValueStorage;
     inserter();
+    inserter(uint_fast64_t fixed_size);
     ~inserter();
 
+    /**
+     * Opening the data structures underneath, if not already opened. This method is also fixed_size aware.
+     *
+     * @param indexFile     The file for the indexing data structure. This filename is ignored if the inserted has been
+     *                      already initialised as a fixed_value element
+     * @param kvFile        Always not ignored mapper to the file containing the actual values
+     */
     void open(std::string indexFile, std::string kvFile);
 
     void close();

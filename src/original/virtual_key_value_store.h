@@ -47,8 +47,10 @@
  * - The [] operator is used to serialize the data (via Deref)
  *
  */
-ABSTRACT_CLASS virtual_key_value_store : public virtual_sorter, public serializer_with_sort {
-    // Destructed by default when destructing the class'object -- freeing the memory
+class virtual_key_value_store : public virtual_sorter, public serializer_with_sort {
+    virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile);
+
+// Destructed by default when destructing the class'object -- freeing the memory
     smart_malloc malloced;
 
 public:

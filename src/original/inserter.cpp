@@ -30,16 +30,23 @@ extern "C" {
 #include <unistd.h>
 }
 
-inserter::inserter() {
+inserter::inserter() : inserter{0, false} {}
+
+inserter::inserter(uint_fast64_t fixed_size) : inserter{fixed_size, true} { }
+
+inserter::inserter(uint_fast64_t fixed_size, bool isFixedSize) {
     toSerialize.begin = 0;
     toSerialize.end = 0;
     fdIndex = nullptr;
     fdKeyValueStorage = nullptr;
+    hasFixedSizeInput = isFixedSize;
+    this->fixed_size = fixed_size;
 }
 
 void inserter::open(std::string indexFile, std::string kvFile) {
     close();
-    fdIndex = fopen(indexFile.c_str(), "a+");
+    if (!hasFixedSizeInput)
+        fdIndex = fopen(indexFile.c_str(), "a+");
     fdKeyValueStorage = fopen(kvFile.c_str(), "a+");
     index = indexFile;
     file = kvFile;
@@ -62,9 +69,11 @@ void inserter::writeKeyAndValue(void *mem, uint_fast64_t size) {
 
 void inserter::risk_writeKeyAndValue_with_prev(void *mem, uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size) {
     fwrite(mem, mem_size, 1, fdKeyValueStorage);
-    toSerialize.begin = toSerialize.end;
-    toSerialize.end = toSerialize.begin + risk_prev_inserted_size + mem_size;
-    fwrite(&toSerialize,sizeof(struct index),1,fdIndex);
+    if (!hasFixedSizeInput) {
+        toSerialize.begin = toSerialize.end;
+        toSerialize.end = toSerialize.begin + risk_prev_inserted_size + mem_size;
+        fwrite(&toSerialize,sizeof(struct index),1,fdIndex);
+    }
 }
 
 inserter::~inserter() {
