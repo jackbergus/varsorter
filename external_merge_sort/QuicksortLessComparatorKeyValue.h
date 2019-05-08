@@ -32,8 +32,10 @@ ABSTRACT_CLASS QuicksortLessComparatorKeyValue {
 public:
     ABSTRACT bool compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) = 0;
     bool greaterThan(void* lhs, size_t leftS, void* rhs, size_t rightS) {
+        // size vectors associated to both the key and the value
         auto* lptr = (uint_fast64_t*)lhs;
         auto* rptr = (uint_fast64_t*)rhs;
+        // pointing to the key, and setting each key size (from the offset)
         return compareKeys(
                 (char*)lhs+(sizeof(uint_fast64_t)*2),
                 lptr[0],

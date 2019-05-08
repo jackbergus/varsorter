@@ -27,7 +27,9 @@ ADD_LIBRARY(libvarsorter STATIC
             external_merge_sort/QuicksortLessComparatorKeyValue.h
             external_merge_sort/QuicksortComparatorTest.cpp
             external_merge_sort/QuicksortComparatorTest.h
-        src/KeyValueStore.h
+            external_merge_sort/ExternalULongKeyComparator.cpp
+            external_merge_sort/ExternalULongKeyComparator.h
+            src/KeyValueStore.h
         )
 
 set(EXTERNAL_MERGE_SORT_FILES   )
@@ -41,6 +43,10 @@ add_executable(string_key_store_example
 add_executable(external_sorter_example
                examples/external_merge_sort.cpp)
 
+add_executable(external_merge_sort_nummap
+                examples/external_merge_sort_nummap.cpp)
+
 TARGET_LINK_LIBRARIES(serialize_with_sort_example libvarsorter )
 TARGET_LINK_LIBRARIES(string_key_store_example libvarsorter )
 TARGET_LINK_LIBRARIES(external_sorter_example libvarsorter )
+TARGET_LINK_LIBRARIES(external_merge_sort_nummap libvarsorter )

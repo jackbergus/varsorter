@@ -87,7 +87,9 @@ public:
         void setNewLen(uint_fast64_t i);
         void updateWith(uint_fast64_t offsetBegin, uint_fast64_t newLen);
         void getKey(iovec& key);
+        void getKey(uint_fast64_t& key);
         void getValue(iovec &iovec);
+        void getValue(uint_fast64_t& key);
     };
 
     iterator binSearch(void* tmp, uint_fast64_t size);

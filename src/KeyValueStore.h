@@ -43,7 +43,7 @@ public:
     KeyValueStore(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
                                                                                                         valuesFile) {}
 
-    int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) override {
+    int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         keyComparator.compareKeys(lhs, lhs_size,rhs, rhs_size);
     }
 

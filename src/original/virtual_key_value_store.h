@@ -62,7 +62,7 @@ public:
      * @param rhs_size      Length of the right key
      * @return
      */
-    ABSTRACT int compareKeys(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size) = 0;
+    int compareKeys(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size);;
 
     /**
      * Internal function, that will use the user-defined compareKeys to perform a key comparison
@@ -82,8 +82,8 @@ public:
         virtual_key_value_store* a;
         struct new_iovec key;
         Deref(virtual_key_value_store* a, struct iovec& index);
-
         Deref(virtual_key_value_store* a, std::string& index);
+        Deref(virtual_key_value_store* a, uint_fast64_t& index);
 
         /**
          * This is actually the getter: it uses the binary search for getting the required element. Please note that the
@@ -92,6 +92,7 @@ public:
          * @return
          */
         explicit operator struct iovec*();
+        explicit operator uint_fast64_t();
 
         void operator=(const struct iovec& value);
         void operator=(std::string& value);
@@ -103,6 +104,7 @@ public:
 
     Deref operator[](struct iovec& index);
     Deref operator[](std::string& index);
+    Deref operator[](uint_fast64_t & index);
 
 };
 

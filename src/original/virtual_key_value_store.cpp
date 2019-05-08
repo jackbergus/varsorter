@@ -55,6 +55,14 @@ virtual_key_value_store::Deref virtual_key_value_store::operator[](std::string &
     return Deref(this, index);
 }
 
+virtual_key_value_store::Deref virtual_key_value_store::operator[](uint_fast64_t &index) {
+    return Deref(this, index);
+}
+
+int virtual_key_value_store::compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
+    return 0;
+}
+
 // Deref
 
 virtual_key_value_store::Deref::Deref(virtual_key_value_store *a, struct iovec &index) : a(a), key(index.iov_base,index.iov_len) {}
@@ -62,6 +70,11 @@ virtual_key_value_store::Deref::Deref(virtual_key_value_store *a, struct iovec &
 virtual_key_value_store::Deref::Deref(virtual_key_value_store *a, std::string &index) : a(a) {
     key.iov_base = (void *) index.c_str();
     key.iov_len = index.length();
+}
+
+virtual_key_value_store::Deref::Deref(virtual_key_value_store *a, uint_fast64_t &index) : a(a) {
+    key.iov_base = (void*) &index;
+    key.iov_len = sizeof(uint_fast64_t);
 }
 
 void virtual_key_value_store::Deref::operator=(const struct iovec &value) {
@@ -112,7 +125,16 @@ void virtual_key_value_store::Deref::operator=(uint_fast64_t &value) {
     //free(kvPtr);
 }
 
+
+
 virtual_key_value_store::Deref::operator struct iovec *() {
     //getter
     return *a->searchFor(key.iov_base, key.iov_len);
+}
+
+virtual_key_value_store::Deref::operator uint_fast64_t() {
+    //getter
+    uint_fast64_t value;
+    a->searchFor(key.iov_base, key.iov_len).getValue(value);
+    return value;
 }

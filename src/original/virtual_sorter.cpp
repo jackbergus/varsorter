@@ -223,6 +223,18 @@ void virtual_sorter::iterator::getValue(iovec &value) {
     value.iov_base = (void*)(mmap_kv_File + mmap_index_File[index].begin + sizeof(uint_fast64_t)*2 +((uint_fast64_t*)(mmap_kv_File + mmap_index_File[index].begin))[0]);
 }
 
+
+void virtual_sorter::iterator::getValue(uint_fast64_t &value) {
+    if ( ((uint_fast64_t*)(mmap_kv_File + mmap_index_File[index].begin))[1] == sizeof(uint_fast64_t))
+        value = *(uint_fast64_t*)(mmap_kv_File + mmap_index_File[index].begin + sizeof(uint_fast64_t)*2 +((uint_fast64_t*)(mmap_kv_File + mmap_index_File[index].begin))[0]);
+}
+
+void virtual_sorter::iterator::getKey(uint_fast64_t &key) {
+    if (((uint_fast64_t*)(mmap_kv_File + mmap_index_File[index].begin))[0] == sizeof(uint_fast64_t))
+        key = *(uint_fast64_t*)(mmap_kv_File + mmap_index_File[index].begin + sizeof(uint_fast64_t)*2);
+}
+
+
 //// ITERATOR
 
 virtual_sorter::iterator::iterator() {

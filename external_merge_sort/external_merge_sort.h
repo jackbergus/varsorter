@@ -178,7 +178,7 @@ template <typename QuicksortComparator> class external_merge_sort {
             // Get the minimum element and store it in output file
             struct miniheap_iovec x = minheap.top();
             int fileid = x.fileid;
-            std::cout << std::string((const char*)x.iovec.iov_base, x.iovec.iov_len) << std::endl;
+            //std::cout << std::string((const char*)x.iovec.iov_base, x.iovec.iov_len) << std::endl;
             out.writeKeyAndValue(x.iovec);
             minheap.pop();
             written++;
