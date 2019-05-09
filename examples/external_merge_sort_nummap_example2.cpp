@@ -46,10 +46,11 @@ int main(void) {
     int run_size = 10;
     int size = num_ways*run_size;
     srand(time(NULL));
-
+    uint_fast64_t F = 0;
     for (int i = 0; i < size; i++) {
         uint_fast64_t arr[2];
         arr[0] = rand();
+        if (!i) F = arr[0];
         arr[1] = rand();
         c.insert(&arr, 16);
         std::cout << arr[0] << ":" << arr[1] << std::endl;
@@ -64,5 +65,5 @@ int main(void) {
     for (virtual_sorter::iterator it = c.begin(), end = c.end(); it != end; it++ ) {
         std::cout << ((uint_fast64_t*)it->iov_base)[0] << ":" << ((uint_fast64_t*)it->iov_base)[1] << std::endl;
     }
-
+    std::cout << F << " =  " << ((uint_fast64_t*)((struct iovec*)c[F])->iov_base)[0] << " =  " << ((uint_fast64_t*)((struct iovec*)c[F])->iov_base)[1]<< std::endl;
 }

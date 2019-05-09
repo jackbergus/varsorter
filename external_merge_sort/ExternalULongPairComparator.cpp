@@ -24,7 +24,9 @@
 
 #include "ExternalULongPairComparator.h"
 
+
+#define get(ptr, size)  (*(((size) == sizeof(uint_fast64_t)*2) ? ((uint_fast64_t*)((char*)(ptr))) : ((uint_fast64_t*)(ptr))))
+
 bool ExternalULongPairComparator::greaterThan(void *leftM, size_t leftS, void *rightM, size_t rightS) {
-    return static_cast<std::pair<uint_fast64_t,uint_fast64_t >*>(leftM)->first >
-            static_cast<std::pair<uint_fast64_t,uint_fast64_t >*>(rightM)->first;
+    return  (*((uint_fast64_t*)leftM)) > (*((uint_fast64_t*)rightM));
 }
