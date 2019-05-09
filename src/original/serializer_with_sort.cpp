@@ -144,7 +144,10 @@ int serializer_with_sort::update_internal(virtual_sorter::iterator& ptr, void *n
 virtual_sorter::iterator serializer_with_sort::searchFor(void *buff, uint_fast64_t len) {
     if (hasRiskInsert) {
         c.close();
-        sorter->openIfRequired(index, values);
+        if (isFixedSize)
+            sorter->openvirtual_sorter(fixed_size, values);
+        else
+            sorter->openIfRequired(index, values);
     }
     if (buff == nullptr || len == 0) {
         return sorter->end();

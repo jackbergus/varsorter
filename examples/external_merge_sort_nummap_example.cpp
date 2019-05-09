@@ -46,8 +46,10 @@ int main(void) {
     int run_size = 10;
     int size = num_ways*run_size;
     srand(time(NULL));
+    uint_fast64_t F = 0;
     for (int i = 0; i < size; i++) {
         uint_fast64_t key = rand();
+        if (!F) F = key;
         uint_fast64_t value = rand();
         c[key] = value;
         std::cout << key << ":" << value << std::endl;
@@ -57,12 +59,12 @@ int main(void) {
     external_merge_sort<ExternalULongKeyComparator> ems{sizeof(uint_fast64_t)*4};
     ems.run(values, index, num_ways);
     std::cout << "sorting finished" << std::endl;
-    c.sorter = new void_virtual_sorter();
     c.openIfRequired(sizeof(uint_fast64_t), values);
     for (virtual_sorter::iterator it = c.begin(), end = c.end(); it != end; it++ ) {
         uint_fast64_t key, value;
         it.getKey(key); it.getValue(value);
         std::cout << key << ":" << value << std::endl;
     }
+    std::cout << F << " " << ( uint_fast64_t)c[F] << std::endl;
 
 }

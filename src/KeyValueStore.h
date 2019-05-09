@@ -27,6 +27,8 @@
 #include <cstdio>
 #include "original/virtual_key_value_store.h"
 
+#define GET_SERIALIZATION_COST(X)           ((sizeof(LONG_NUMERIC)*2)+X)
+
 /**
  * This KeyValue store has a specific policy for using external_merge_sort whenever the elements became too big for
  * using a secondary-memory via memory mapping sorting
@@ -41,15 +43,23 @@ public:
     size_t bigThreshold = 10000000;
     size_t runSize =      1000000;
     KeyValueStore(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
-                                                                                                        valuesFile) {}
+                                                                                                        valuesFile) {
+        sorter = this;
+    }
 
     KeyValueStore(uint_fast64_t fixed_size, const std::string &valuesFile) : virtual_key_value_store(fixed_size,
-                                                                                                         valuesFile) {}
+                                                                                                         valuesFile) {
+        sorter = this;
+    }
 
     KeyValueStore() : KeyValueStore{std::tmpnam(nullptr), std::tmpnam(nullptr)} {}
 
     int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         keyComparator.compare(lhs, lhs_size,rhs, rhs_size);
+    }
+
+    int compare(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
+        compareKeys(lhs, lhs_size,rhs, rhs_size);
     }
 
     void sortPair() {

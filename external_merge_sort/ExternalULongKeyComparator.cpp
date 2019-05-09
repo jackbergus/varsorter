@@ -24,7 +24,8 @@
 
 #include "ExternalULongKeyComparator.h"
 
+#define get(ptr, size)  (*(((size) == sizeof(uint_fast64_t)*4) ? ((uint_fast64_t*)((char*)(ptr)+(sizeof(uint_fast64_t)*2))) : ((uint_fast64_t*)(ptr))))
+
 bool ExternalULongKeyComparator::greaterThan(void *leftM, size_t leftS, void *rightM, size_t rightS) {
-    return *((uint_fast64_t*)((char*)leftM+(sizeof(uint_fast64_t)*2))) >
-           *((uint_fast64_t*)((char*)(char*)rightM+(sizeof(uint_fast64_t)*2)));
+    return get(leftM, leftS) > get(rightM, rightS);
 }
