@@ -52,6 +52,16 @@ void inserter::open(std::string indexFile, std::string kvFile) {
     file = kvFile;
 }
 
+void inserter::open(uint_fast64_t fixed_size, std::string kvFile) {
+    close();
+    hasFixedSizeInput = true;
+    fdIndex = nullptr;
+    this->fixed_size = fixed_size;
+    fdKeyValueStorage = fopen(kvFile.c_str(), "a+");
+    index = "";
+    file = kvFile;
+}
+
 void inserter::close() {
     if (fdIndex) {
         fclose(fdIndex);
@@ -69,6 +79,7 @@ void inserter::writeKeyAndValue(void *mem, uint_fast64_t size) {
 
 void inserter::risk_writeKeyAndValue_with_prev(void *mem, uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size) {
     fwrite(mem, mem_size, 1, fdKeyValueStorage);
+    fflush(fdKeyValueStorage);
     if (!hasFixedSizeInput) {
         toSerialize.begin = toSerialize.end;
         toSerialize.end = toSerialize.begin + risk_prev_inserted_size + mem_size;

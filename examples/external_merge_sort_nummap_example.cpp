@@ -1,5 +1,5 @@
 /*
- * external_merge_sort_nummap.cpp
+ * external_merge_sort_nummap_example.cpp
  * This file is part of varsorter
  *
  * Copyright (C) 2019 - Giacomo Bergami
@@ -23,8 +23,6 @@
 // Created by giacomo on 08/05/19.
 //
 
-#include "../src/original/virtual_key_value_store.h"
-#include "../external_merge_sort/QuicksortLessComparator.h"
 #include "../src/KeyValueStore.h"
 #include "../external_merge_sort/ExternalULongKeyComparator.h"
 
@@ -39,7 +37,8 @@ int main(void) {
     std::string index{"index.bin"};
     unlink(index.c_str());
     unlink(values.c_str());
-    KeyValueStore<ExternalULongKeyComparator> c{index, values};
+                                                // The data block now consists of the offsets to the elements, and then for the two values that we are serializing.
+    KeyValueStore<ExternalULongKeyComparator> c{sizeof(uint_fast64_t)*4, values};
 
     //virtual_key_value_store c{index.c_str(), values.c_str()};
     // No. of Partitions of input file.
@@ -55,10 +54,11 @@ int main(void) {
     }
     std::cout << "Closing file & sorting" << std::endl;
     c.c.close();
-    external_merge_sort<ExternalULongKeyComparator> ems;
+    external_merge_sort<ExternalULongKeyComparator> ems{sizeof(uint_fast64_t)*4};
     ems.run(values, index, num_ways);
     std::cout << "sorting finished" << std::endl;
-    c.openIfRequired(index, values);
+    c.sorter = new void_virtual_sorter();
+    c.openIfRequired(sizeof(uint_fast64_t), values);
     for (virtual_sorter::iterator it = c.begin(), end = c.end(); it != end; it++ ) {
         uint_fast64_t key, value;
         it.getKey(key); it.getValue(value);

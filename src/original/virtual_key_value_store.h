@@ -48,13 +48,13 @@
  *
  */
 class virtual_key_value_store : public virtual_sorter, public serializer_with_sort {
-    virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile);
 
 // Destructed by default when destructing the class'object -- freeing the memory
     smart_malloc malloced;
 
 public:
     virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile);
+    virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile);
 
     /**
      * Now the user has only to compare the keys as a definition. All the values are ignored.
@@ -64,7 +64,7 @@ public:
      * @param rhs_size      Length of the right key
      * @return
      */
-    int compareKeys(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size);;
+    virtual int compareKeys(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size) = 0;
 
     /**
      * Internal function, that will use the user-defined compareKeys to perform a key comparison

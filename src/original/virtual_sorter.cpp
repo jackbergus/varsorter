@@ -25,7 +25,7 @@
 
 #define swap(p,left) \
      do {\
-         if (isFixedSize) {\
+         if (!isFixedSize) {\
             uint_fast64_t aib = ptr_arr[p]->begin;\
             uint_fast64_t aie = ptr_arr[p]->end;\
             ptr_arr[p]->begin = ptr_arr[left]->begin;\

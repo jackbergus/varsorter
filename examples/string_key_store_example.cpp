@@ -31,8 +31,7 @@ class string_kvcmp : public virtual_key_value_store {
 public:
     string_kvcmp(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
                                                                                                         valuesFile) {}
-
-    int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) override {
+    int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         int toret = strncmp(static_cast<const char *>(lhs), static_cast<const char *>(rhs), lhs_size < rhs_size ? lhs_size : rhs_size);
         if (lhs_size == rhs_size)
             return toret;
@@ -40,7 +39,6 @@ public:
             return lhs_size < rhs_size ? -1 : 1;
         } else return toret;
     }
-
 };
 
 int main() {

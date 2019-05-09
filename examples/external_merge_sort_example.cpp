@@ -1,5 +1,5 @@
 /*
- * main.cpp
+ * external_merge_sort_example.cpp
  * This file is part of varsorter
  *
  * Copyright (C) 2019 - Giacomo Bergami
@@ -90,7 +90,14 @@ int main() {
         c.c.close();
         external_merge_sort<QuicksortComparatorTest> ems;
         ems.run(file1, file2, num_ways);
+        c.sorter = new void_virtual_sorter();
+        for (virtual_sorter::iterator it = c.begin(); it != c.end(); it++ ) {
+            // It already contains the key/value, or the single value (as you serialized the data)
+            std::cout << std::string(static_cast<const char *>(it->iov_base), it->iov_len) << std::endl;
+        }
+        delete c.sorter;
     }
 
 
 }
+

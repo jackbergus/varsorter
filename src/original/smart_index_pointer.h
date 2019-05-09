@@ -49,7 +49,7 @@ struct smart_index_pointer {
      * External memory evaluation
      * @param externalPointer
      */
-    smart_index_pointer(index *externalPointer);
+    smart_index_pointer(struct index *externalPointer);
 
     /**
      * Offset mimicking
@@ -57,7 +57,7 @@ struct smart_index_pointer {
      */
     smart_index_pointer(uint_fast64_t fixBlockSize);
 
-    void open(index* ptr);
+    void open(struct index* ptr);
     void open(uint_fast64_t len);
 
     /**

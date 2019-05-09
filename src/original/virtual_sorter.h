@@ -35,8 +35,6 @@
 class virtual_sorter {
 protected:
     int fdmif;
-    bool isFixedSize;
-    uint_fast64_t fixed_size;
 
     char* mmap_kv_File = nullptr;
     int fdkvf;
@@ -55,6 +53,8 @@ public:
     struct index* mmap_index_File = nullptr;
     uint_fast64_t struct_index_size;
     uint_fast64_t data_serialized_file;
+    bool isFixedSize;
+    uint_fast64_t fixed_size;
 
     virtual_sorter();
     void openvirtual_sorter(std::string indexFile, std::string kvFile);
@@ -70,7 +70,7 @@ public:
      * @param rhs_size      Size of the right memory
      * @return              Standard int comparison value (0 equiv, 1 greater, -1 less)
      */
-    int compare(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size) { return 0; };
+    virtual int compare(void* lhs, uint_fast64_t lhs_size, void* rhs, uint_fast64_t rhs_size) = 0;
     void sortPair();
     ~virtual_sorter();
     void printIndex();

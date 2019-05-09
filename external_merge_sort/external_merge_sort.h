@@ -35,6 +35,11 @@
 #include "../src/original/smart_malloc.h"
 #include "quicksort.h"
 
+struct void_virtual_sorter : public  virtual_sorter {
+    void_virtual_sorter();
+    int compare(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) override;
+};
+
 /**
  * Data structure used by the min-Heap.
  * This structure is relevant not only because it stores each file value per time, but also because it stores which
@@ -53,6 +58,8 @@ struct miniheap_iovec {
  */
 template <typename QuicksortComparator> class external_merge_sort {
     struct quicksort<QuicksortComparator> q;
+    bool isFixedSize;
+    uint_fast64_t data_block_fixed_size;
 
     /**
      * Using a merge-sort algorithm, create the initial runs, and divide them evenly among the output files
@@ -66,22 +73,36 @@ template <typename QuicksortComparator> class external_merge_sort {
      */
     void createInitialRuns(std::string &input_file, std::string &input_index_file, int run_size,
                            std::vector<serializer_with_sort>& out) {
-        virtual_sorter opener;
-        opener.openvirtual_sorter(input_index_file, input_file);
+        void_virtual_sorter opener;
+        size_t num_ways, full;
+        size_t completed = 0;
+
+        if (isFixedSize) {
+            opener.openvirtual_sorter(data_block_fixed_size, input_file);
+            full = (opener.data_serialized_file / data_block_fixed_size);
+            num_ways = (opener.data_serialized_file / data_block_fixed_size) / run_size;
+        } else {
+            opener.openvirtual_sorter(input_index_file, input_file);
+            full = (opener.struct_index_size / (sizeof(struct index)));
+            num_ways = full / run_size;
+        }
 
         // output scratch files;
-        size_t num_ways = (opener.struct_index_size / (sizeof(struct index))) / run_size;
-        size_t full = (opener.struct_index_size / (sizeof(struct index))), completed = 0;
         out.reserve(num_ways);
 
         for (int i = 0; i < num_ways; i++)
         {
             // convert i to string
             std::string filename_value = std::to_string(i) + ".value";
-            std::string filename_index = std::to_string(i) + ".idx";
 
-            // Open output files in write mode.
-            out.emplace_back(filename_index, filename_value).sorter = new virtual_sorter();
+            if (isFixedSize) {
+                // Open output files in write mode.
+                out.emplace_back(data_block_fixed_size, filename_value).sorter = new void_virtual_sorter();
+            } else {
+                std::string filename_index = std::to_string(i) + ".idx";
+                // Open output files in write mode.
+                out.emplace_back(filename_index, filename_value).sorter = new void_virtual_sorter();
+            }
         }
 
         // allocate a dynamic array large enough
@@ -100,7 +121,6 @@ template <typename QuicksortComparator> class external_merge_sort {
             int currentSize = 0;
             for (i = 0; i < run_size; i++) {
                 if (ptr == fini || ptr->iov_base == nullptr) {
-                    more_input = false;
                     break;
                 } else {
                     if (!next_output_file) {
@@ -146,7 +166,11 @@ template <typename QuicksortComparator> class external_merge_sort {
    void mergeFiles(std::string &out_filename, std::string &out_index, std::vector<serializer_with_sort> &in) {
         // FINAL OUTPUT FILE
         inserter out;
-        out.open(out_index, out_filename);
+
+        if (isFixedSize) {
+            out.open(data_block_fixed_size, out_filename);
+        } else
+            out.open(out_index, out_filename);
 
         std::vector<virtual_sorter::iterator> ptrs, ends;
 
@@ -199,6 +223,7 @@ template <typename QuicksortComparator> class external_merge_sort {
         for (serializer_with_sort& ptr : in) {
             delete ptr.sorter;
             ptr.sorter = nullptr;
+            ptr.unlink();
         }
 
         out.close();
@@ -206,6 +231,15 @@ template <typename QuicksortComparator> class external_merge_sort {
 
 
 public:
+
+    external_merge_sort() {
+       isFixedSize = false;
+       data_block_fixed_size = 0;
+    }
+
+    external_merge_sort(uint_fast64_t data_block) : data_block_fixed_size{data_block} {
+       isFixedSize = true;
+    }
 
     /**
      * Before running the method, ensure that these two files are closed

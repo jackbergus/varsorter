@@ -43,8 +43,11 @@ public:
     KeyValueStore(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
                                                                                                         valuesFile) {}
 
+    KeyValueStore(uint_fast64_t fixed_size, const std::string &valuesFile) : virtual_key_value_store(fixed_size,
+                                                                                                         valuesFile) {}
+
     int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
-        keyComparator.compareKeys(lhs, lhs_size,rhs, rhs_size);
+        keyComparator.compare(lhs, lhs_size,rhs, rhs_size);
     }
 
     void sortPair() {
@@ -54,24 +57,32 @@ public:
             openvirtual_sorter(indexFile, bulkFile);
         } else {
             //printIndex();
-            quicksort(mmap_index_File, 0, struct_index_size / sizeof(struct index)-1);
-            std::string sf = bulkFile+".sorted";
-            FILE* f = fopen(sf.c_str(),"w+");
-            uint_fast64_t init = 0;
-            for (uint_fast64_t i = 0; i< struct_index_size / sizeof(struct index); i++) {
-                fwrite(mmap_kv_File+mmap_index_File[i].begin, mmap_index_File[i].end-mmap_index_File[i].begin, 1, f);
-                mmap_index_File[i].end = mmap_index_File[i].end - mmap_index_File[i].begin + init;
-                mmap_index_File[i].begin = init;
-                init = mmap_index_File[i].end;
-            }
-            fclose(f);
-            // Closing the old unsorted file
-            close(fdkvf);
-            munmap(mmap_kv_File, data_serialized_file);
-            fdkvf = 0;
-            rename(sf.c_str(), bulkFile.c_str());
-            //printIndex();
-            mmap_kv_File = (char*)mmapFile(bulkFile, &data_serialized_file, &fdkvf);
+            quicksort(0, (virtual_sorter::isFixedSize ? (data_serialized_file / virtual_sorter::fixed_size -1) : (struct_index_size / sizeof(struct index)-1)));
+            // I have to reorder the external memory after reordering the index if and only if the memory was not already in-place
+            // sorted, 'cause the data structure is bounded
+            if (!virtual_sorter::isFixedSize) {
+                std::string sf = bulkFile + ".sorted";
+                FILE *f = fopen(sf.c_str(), "w+");
+                // pointer keeping update of how many elements have been written so far.
+                uint_fast64_t init = 0;
+                for (uint_fast64_t i = 0; i < struct_index_size / sizeof(struct index); i++) {
+                    // Ordering the data element according to the index ordering, that is writing in the first position the
+                    // element in the first position of the index, which is now the smallest element.
+                    fwrite(mmap_kv_File + mmap_index_File[i].begin, mmap_index_File[i].end - mmap_index_File[i].begin, 1, f);
+                    // updating the index data structure
+                    mmap_index_File[i].end = mmap_index_File[i].end - mmap_index_File[i].begin + init;
+                    mmap_index_File[i].begin = init;
+                    init = mmap_index_File[i].end;
+                }
+                fclose(f);
+                // Closing the old unsorted file
+                close(fdkvf);
+                munmap(mmap_kv_File, data_serialized_file);
+                fdkvf = 0;
+                rename(sf.c_str(), bulkFile.c_str());
+                //printIndex();
+                mmap_kv_File = (char *) mmapFile(bulkFile, &data_serialized_file, &fdkvf);
+            } // else, the memory has been already swapped
         }
 
     }

@@ -25,7 +25,7 @@
 #include <cassert>
 #include "smart_index_pointer.h"
 
-smart_index_pointer::smart_index_pointer(index *externalPointer) : external_pointer(externalPointer) {
+smart_index_pointer::smart_index_pointer(struct index *externalPointer) : external_pointer(externalPointer) {
     fix_block_size = 0;
 }
 
@@ -49,7 +49,7 @@ smart_index_pointer::smart_index_pointer() {
     fix_block_size = 1UL;
 }
 
-void smart_index_pointer::open(index *ptr) {
+void smart_index_pointer::open(struct index *ptr) {
     fix_block_size = 0;
     external_pointer = ptr;
 }

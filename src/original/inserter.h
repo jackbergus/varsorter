@@ -59,6 +59,14 @@ public:
      */
     void open(std::string indexFile, std::string kvFile);
 
+    /**
+     * This method forces to have a fixed size
+     *
+     * @param fixed_size
+     * @param kvFile
+     */
+    void open(uint_fast64_t fixed_size, std::string kvFile);
+
     void close();
     void dounlink();
 
