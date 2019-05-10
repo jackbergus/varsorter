@@ -28,7 +28,8 @@
 #include "QuicksortLessComparator.h"
 
 /**
- * Implementing a key-only comparator
+ * Implementing a key-only comparator. In particular, it ignores the other values, and focuses only on the first
+ * argument, that it should be a LONG_NUMERIC
  */
 class ExternalULongPairComparator : public QuicksortLessComparator {
 public:

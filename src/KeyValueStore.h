@@ -40,19 +40,22 @@ template <typename QuicksortLessComparatorForKeys> class KeyValueStore : public 
     external_merge_sort<QuicksortLessComparatorForKeys> ems;
 
 public:
-    size_t bigThreshold = 10000000;
-    size_t runSize =      1000000;
+    size_t bigThreshold = 10000;
+    size_t runSize =      10000000;
     KeyValueStore(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
-                                                                                                        valuesFile) {
+                                                                                                        valuesFile), ems{} {
         sorter = this;
     }
 
     KeyValueStore(uint_fast64_t fixed_size, const std::string &valuesFile) : virtual_key_value_store(fixed_size,
-                                                                                                         valuesFile) {
+                                                                                                         valuesFile), ems{fixed_size} {
         sorter = this;
     }
 
     KeyValueStore() : KeyValueStore{std::tmpnam(nullptr), std::tmpnam(nullptr)} {}
+
+
+    KeyValueStore(uint_fast64_t fixed_size) : KeyValueStore{fixed_size, std::tmpnam(nullptr)} {}
 
     int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         keyComparator.compare(lhs, lhs_size,rhs, rhs_size);
