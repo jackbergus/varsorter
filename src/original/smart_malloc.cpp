@@ -22,15 +22,23 @@
 
 #include "smart_malloc.h"
 
+void memory_copy(char *dest, const char *src, size_t n) {
+    size_t i;
+    for (i = 0; i < n; i++)
+        dest[i] = src[i];
+}
+
 void *smart_malloc::domalloc(size_t size) {
     if (malloced_iovec.iov_base == nullptr) {
         malloced_iovec.iov_base = malloc(size);
+        memset(malloced_iovec.iov_base, 0, size);
         malloced_iovec.iov_len = size;
     } else if (malloced_iovec.iov_len < size) {
         if (malloced_iovec.iov_base) {
             malloced_iovec.iov_base = realloc(malloced_iovec.iov_base, size);
             malloced_iovec.iov_len = size;
         }
+        memset(malloced_iovec.iov_base, 0, size);
     }
     return malloced_iovec.iov_base;
 }
@@ -45,12 +53,12 @@ smart_malloc::~smart_malloc() {
 
 void smart_malloc::docopy(struct iovec &toCopy) {
     domalloc(toCopy.iov_len);
-    std:memcpy(malloced_iovec.iov_base, toCopy.iov_base, toCopy.iov_len);
+    memory_copy((char*)malloced_iovec.iov_base, (char*)toCopy.iov_base, toCopy.iov_len);
 }
 
 void smart_malloc::docopy(struct iovec *toCopy) {
     domalloc(toCopy->iov_len);
-    std:memcpy(malloced_iovec.iov_base, toCopy->iov_base, toCopy->iov_len);
+    memory_copy((char*)malloced_iovec.iov_base, (char*)toCopy->iov_base, toCopy->iov_len);
 }
 
 smart_malloc::smart_malloc() {

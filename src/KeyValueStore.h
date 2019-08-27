@@ -42,7 +42,7 @@ template <typename QuicksortLessComparatorForKeys> class KeyValueStore : public 
 public:
     size_t bigThreshold = 10000;
     size_t runSize =      10000000;
-    KeyValueStore(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
+    KeyValueStore(const std::string indexFile, const std::string valuesFile) : virtual_key_value_store(indexFile,
                                                                                                         valuesFile), ems{} {
         sorter = this;
     }

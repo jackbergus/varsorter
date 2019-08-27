@@ -26,11 +26,11 @@
 
 serializer_with_sort::serializer_with_sort(std::string indexFile, std::string valuesFile) : index{indexFile}, values{valuesFile}, c{} {
     fixed_size = 0L;
-    isFixedSize = false;
+    isFixedSize_sws = false;
 }
 
 serializer_with_sort::serializer_with_sort(uint_fast64_t fixed_size, std::string valuesFile) : fixed_size{fixed_size}, values{valuesFile}, c{fixed_size} {
-    isFixedSize = true;
+    isFixedSize_sws = true;
 }
 
 bool serializer_with_sort::risk_insert(void *buff, uint_fast64_t len) {
@@ -58,9 +58,11 @@ bool serializer_with_sort::risk_insert(void *buff, uint_fast64_t len) {
 void serializer_with_sort::sortElement() {
     if (!hasSorted) {
         c.close();
+        if (sorter)
+            sorter->doclose();
         hasInserted = false;
         hasRiskInsert = false;
-        if (isFixedSize)
+        if (isFixedSize_sws)
             sorter->openvirtual_sorter(fixed_size, values);
         else
             sorter->openvirtual_sorter(index, values);
@@ -89,27 +91,31 @@ int serializer_with_sort::update(void *old, uint_fast64_t oldLen, void *neu, uin
 virtual_sorter::iterator serializer_with_sort::begin() {
     if (hasRiskInsert) {
         c.close();
+        if (sorter)
+            sorter->doclose();
         if (sorter) {
-            if (isFixedSize)
+            if (isFixedSize_sws)
                 sorter->openvirtual_sorter(fixed_size, values);
             else
                 sorter->openIfRequired(index, values);
         }
     }
-    return sorter->begin();
+    return sorter->begin(isFixedSize_sws);
 }
 
 virtual_sorter::iterator serializer_with_sort::end() {
     if (hasRiskInsert) {
         c.close();
+        if (sorter)
+            sorter->doclose();
         if (sorter) {
-            if (isFixedSize)
+            if (isFixedSize_sws)
                 sorter->openvirtual_sorter(fixed_size, values);
             else
                 sorter->openIfRequired(index, values);
         }
     }
-    return sorter->end();
+    return sorter->end(isFixedSize_sws);
 }
 
 int serializer_with_sort::update(virtual_sorter::iterator &iterator, void *pVoid, unsigned long i) {
@@ -122,8 +128,8 @@ int serializer_with_sort::update_internal(virtual_sorter::iterator& ptr, void *n
     hasSorted = false; // If I now need to further search, the data is no more sorted
 
     // If the new value is shorter than the previous one, then I can overwrite the old information with this new one.
-    if ((isFixedSize) || (ptr->iov_len >= newLen)) {
-        if (!isFixedSize) ptr.setNewLen(newLen);
+    if ((isFixedSize_sws) || (ptr->iov_len >= newLen)) {
+        if (!isFixedSize_sws) ptr.setNewLen(newLen);
         sorter->risk_overwrite(ptr->iov_base, neu, newLen); // c is closed
         // Do nothing else, and return.
         return 1;
@@ -144,7 +150,9 @@ int serializer_with_sort::update_internal(virtual_sorter::iterator& ptr, void *n
 virtual_sorter::iterator serializer_with_sort::searchFor(void *buff, uint_fast64_t len) {
     if (hasRiskInsert) {
         c.close();
-        if (isFixedSize)
+        if (sorter)
+            sorter->doclose();
+        if (isFixedSize_sws)
             sorter->openvirtual_sorter(fixed_size, values);
         else
             sorter->openIfRequired(index, values);

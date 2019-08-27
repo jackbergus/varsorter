@@ -39,7 +39,6 @@ protected:
     char* mmap_kv_File = nullptr;
     int fdkvf;
 
-    bool isOpen = false;
     std::string bulkFile, indexFile;
 
     smart_index_pointer ptr_arr;
@@ -127,9 +126,14 @@ public:
     iterator begin() const;
     iterator end() const;
 
+    iterator begin(bool isFixedExplicit) const;
+    iterator end(bool isFixedExplicit) const;
+
     void risk_overwrite(void *i, void *pVoid, uint_fast64_t i1);
     void openIfRequired(std::string indexFile, std::string kvFile);
     void openIfRequired(uint_fast64_t fixed_size, std::string kvFile);
+
+    bool isOpen = false;
 };
 
 

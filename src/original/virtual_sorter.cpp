@@ -249,6 +249,20 @@ virtual_sorter::iterator virtual_sorter::end() const {
         return iterator(mmap_index_File, END_SIZE, 1+END_SIZE, mmap_kv_File);
 }
 
+virtual_sorter::iterator virtual_sorter::begin(bool isFixedSize) const {
+    if (isFixedSize)
+        return iterator(fixed_size, END_SIZE, 0, mmap_kv_File);
+    else
+        return iterator(mmap_index_File, END_SIZE, 0, mmap_kv_File);
+}
+
+virtual_sorter::iterator virtual_sorter::end(bool isFixedSize) const {
+    if (isFixedSize)
+        return iterator(fixed_size, END_SIZE, 1+END_SIZE, mmap_kv_File);
+    else
+        return iterator(mmap_index_File, END_SIZE, 1+END_SIZE, mmap_kv_File);
+}
+
 /*
 
   ___  _                    _

@@ -97,11 +97,13 @@ template <typename QuicksortComparator> class external_merge_sort {
 
             if (isFixedSize) {
                 // Open output files in write mode.
-                out.emplace_back(data_block_fixed_size, filename_value).sorter = new void_virtual_sorter();
+                out.emplace_back(data_block_fixed_size, filename_value);
+                out.rbegin()->sorter = new void_virtual_sorter();
             } else {
                 std::string filename_index = std::to_string(i) + ".idx";
                 // Open output files in write mode.
-                out.emplace_back(filename_index, filename_value).sorter = new void_virtual_sorter();
+                out.emplace_back(filename_index, filename_value);
+                out.rbegin()->sorter = new void_virtual_sorter();
             }
         }
 

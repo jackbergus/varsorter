@@ -28,6 +28,9 @@
 #include <iostream>
 #include "new_iovec.h"
 
+void memory_copy(char *dest, const char *src, size_t n);
+
+
 /**
  * Given that malloc operations are quite expensive, this implementation of the malloc preserves the biggest allocated
  * size, and keeps that until the end of the process.

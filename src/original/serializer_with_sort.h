@@ -40,7 +40,7 @@ class serializer_with_sort {
     bool hasInserted = false;
     bool hasRiskInsert = false;
     bool hasSorted = false;
-    bool isFixedSize = false;
+    bool isFixedSize_sws = false;
     uint_fast64_t fixed_size = 0;
 
     /**
