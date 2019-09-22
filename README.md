@@ -19,4 +19,5 @@ This library was ment to overcome two of the major problems in current C++ libra
 This implementation is quite straightforward, and can be refactored and made more efficient as it actually is right now.
 
 ## TODO (?) List:
-1. Some additional unit testing to provide the correctness of the implementation should be provided, too.
+1. Add some [Platform independent MemoryMapping](https://www.boost.org/doc/libs/1_63_0/doc/html/interprocess/sharedmemorybetweenprocesses.html#interprocess.sharedmemorybetweenprocesses.mapped_file) 
+2. Some additional unit testing to provide the correctness of the implementation should be provided, too.
