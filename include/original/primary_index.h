@@ -28,15 +28,27 @@
 #include <cstdint>
 
 /**
- * This data structure provides the
+ * This data structure provides the indexing used within the storing function:
  */
-struct index {
+struct primary_index {
+    uint_fast64_t id;
     uint_fast64_t begin;
     uint_fast64_t end;
 
-    index();
+    primary_index();
+    primary_index(uint_fast64_t begin, uint_fast64_t end);
+};
 
-    index(uint_fast64_t begin, uint_fast64_t end);
+/**
+ * This data structure contains the secondary indexing data structure: this assumes that the first element has id 0...
+ * This data structure allows to preserve the access in O(1) to all the elements that were provided
+ */
+struct secondary_index {
+    uint_fast64_t id;
+    uint_fast64_t offset_begin;
+
+    secondary_index();
+    secondary_index(uint_fast64_t id, uint_fast64_t begin);
 };
 
 #endif //VARSORTER_INDEX_H

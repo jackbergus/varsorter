@@ -23,8 +23,8 @@
 // Created by giacomo on 08/05/19.
 //
 
-#include "../src/KeyValueStore.h"
-#include "../external_merge_sort/ExternalULongKeyComparator.h"
+#include "KeyValueStore.h"
+#include "external_merge_sort/ExternalULongKeyComparator.h"
 
 extern "C" {
 #include <unistd.h>
@@ -38,7 +38,7 @@ int main(void) {
     unlink(index.c_str());
     unlink(values.c_str());
                                                 // The data block now consists of the offsets to the elements, and then for the two values that we are serializing.
-    KeyValueStore<ExternalULongKeyComparator> c{sizeof(uint_fast64_t)*4, values};
+    KeyValueStore<ExternalULongKeyComparator> c{sizeof(uint_fast64_t) * 4, values, false};
 
     //virtual_key_value_store c{index.c_str(), values.c_str()};
     // No. of Partitions of input file.
@@ -56,7 +56,7 @@ int main(void) {
     }
     std::cout << "Closing file & sorting" << std::endl;
     c.c.close();
-    external_merge_sort<ExternalULongKeyComparator> ems{sizeof(uint_fast64_t)*4};
+    external_merge_sort<ExternalULongKeyComparator> ems{sizeof(uint_fast64_t)*4, false};
     ems.run(values, index, num_ways);
     std::cout << "sorting finished" << std::endl;
     c.openIfRequired(sizeof(uint_fast64_t), values);

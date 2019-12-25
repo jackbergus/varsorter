@@ -27,19 +27,20 @@
 #include <cstring>
 
 #include "mmapFile.h"
-#include "index.h"
+#include "primary_index.h"
 #include "java_utils.h"
 #include "smart_index_pointer.h"
 #include "smart_malloc.h"
 
 class virtual_sorter {
 protected:
-    int fdmif;
+    int fd_primary_index, fd_secondary_index;
 
     char* mmap_kv_File = nullptr;
-    int fdkvf;
+    bool useSecondaryIndex;
+    int fd_keyvalye;
 
-    std::string bulkFile, indexFile;
+    std::string bulkFile, indexFile, secondaryFile;
 
     smart_index_pointer ptr_arr;
     smart_malloc ptr_mem_tmp;
@@ -49,14 +50,17 @@ protected:
     void quicksort(uint_fast64_t left, uint_fast64_t right);
 
 public:
-    struct index* mmap_index_File = nullptr;
-    uint_fast64_t struct_index_size;
+    struct primary_index* mmap_index_File = nullptr;
+    struct secondary_index* mmap_2index_File = nullptr;
+    uint_fast64_t struct_primary_index_size, struct_secondary_index_size;
     uint_fast64_t data_serialized_file;
     bool isFixedSize;
     uint_fast64_t fixed_size;
 
-    virtual_sorter();
-    void openvirtual_sorter(std::string indexFile, std::string kvFile);
+    bool usesSecondaryIndex() const;
+
+    virtual_sorter(bool uses_secondary);
+    void openvirtual_sorter(std::string primaryIndex_file, std::string kvFile);
     void openvirtual_sorter(uint_fast64_t fixed_size, std::string kvFile);
     void doclose();
 
@@ -76,7 +80,7 @@ public:
 
     class iterator {
 
-        struct index* mmap_index_File;
+        struct primary_index* mmap_index_File;
         uint_fast64_t last_element_pos;
         uint_fast64_t curr_vect_pos;
         char* mmap_kv_File;
@@ -91,13 +95,13 @@ public:
         iterator();
 
         /**
-         * Iterator of a secondary memory object having no fixed size struture, and therefore requiring a
+         * Iterator of a secondary memory object having no fixed size struture, and therefore requiring a primary index
          * @param mmap_index_File
          * @param end_index
          * @param index
          * @param mmap_kv_File
          */
-        iterator(struct index *mmap_index_File, uint_fast64_t end_index, uint_fast64_t index, char *mmap_kv_File);
+        iterator(struct primary_index *mmap_index_File, uint_fast64_t end_index, uint_fast64_t index, char *mmap_kv_File);
 
 
         iterator(uint_fast64_t data_block_size, uint_fast64_t end_index, uint_fast64_t index, char *mmap_kv_File);
@@ -120,8 +124,23 @@ public:
         void getKey(uint_fast64_t& key);
         void getValue(iovec &iovec);
         void getValue(uint_fast64_t& key);
+
+        /**
+         * Returning the original id from the current iteration step.
+         * If the element is not a primary index file, returns the current element position.
+         *
+         * @return
+         */
+        size_t getCurrentPosition() const;
     };
 
+    /**
+     * Using the primary index for scanning
+     *
+     * @param tmp       Element that needs to be found
+     * @param size      Size of the element that needs to be found
+     * @return          Iterator to the found element. If the element has not been found, then the end element is returned
+     */
     iterator binSearch(void* tmp, uint_fast64_t size);
     iterator begin() const;
     iterator end() const;
@@ -129,11 +148,13 @@ public:
     iterator begin(bool isFixedExplicit) const;
     iterator end(bool isFixedExplicit) const;
 
-    void risk_overwrite(void *i, void *pVoid, uint_fast64_t i1);
+    void risk_overwrite_as_memcpy(void *i, void *pVoid, uint_fast64_t i1);
     void openIfRequired(std::string indexFile, std::string kvFile);
     void openIfRequired(uint_fast64_t fixed_size, std::string kvFile);
 
     bool isOpen = false;
+
+    void common_sort_pair(uint_fast64_t right);
 };
 
 

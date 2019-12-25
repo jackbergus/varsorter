@@ -21,15 +21,17 @@
  */
 
 
-#include "virtual_key_value_store.h"
+#include "original/virtual_key_value_store.h"
 
-virtual_key_value_store::virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile) :
-        serializer_with_sort(indexFile, valuesFile), virtual_sorter{} {
+virtual_key_value_store::virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile,
+                                                 bool use_secondary) :
+        serializer_with_sort(indexFile, valuesFile, use_secondary), virtual_sorter{use_secondary} {
     this->sorter = this;
 }
 
-virtual_key_value_store::virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile) :
-        serializer_with_sort(fixed_size, valuesFile), virtual_sorter{} {
+virtual_key_value_store::virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile,
+                                                 bool use_secondary) :
+        serializer_with_sort(fixed_size, valuesFile, use_secondary), virtual_sorter{use_secondary}  {
     this->sorter = this;
 }
 
@@ -95,7 +97,7 @@ void virtual_key_value_store::Deref::operator=(const struct iovec &value) {
     memcpy(((char*)kvPtr)+INITIAL_OFFSET, key.iov_base, key.iov_len);
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, value.iov_base, value.iov_len);
 
-    a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
+    a->update((void *) kvPtr, 0, (void *) kvPtr, keyValMallocd, nullptr);
     //free(kvPtr);
 }
 
@@ -110,7 +112,7 @@ void virtual_key_value_store::Deref::operator=(std::string &value) {
     memcpy(((char*)kvPtr)+INITIAL_OFFSET, key.iov_base, key.iov_len);
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, value.c_str(), value.length());
 
-    a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
+    a->update((void *) kvPtr, 0, (void *) kvPtr, keyValMallocd, nullptr);
     //free(kvPtr);
 }
 
@@ -126,7 +128,7 @@ void virtual_key_value_store::Deref::operator=(uint_fast64_t &value) {
     memcpy(((char*)kvPtr)+INITIAL_OFFSET, key.iov_base, key.iov_len);
     memcpy(((char*)kvPtr)+INITIAL_OFFSET+ key.iov_len, &value, sizeof(uint_fast64_t));
 
-    a->update((void*)kvPtr, 0, (void*)kvPtr, keyValMallocd);
+    a->update((void *) kvPtr, 0, (void *) kvPtr, keyValMallocd, nullptr);
     //free(kvPtr);
 }
 

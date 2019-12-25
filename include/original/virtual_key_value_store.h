@@ -33,7 +33,7 @@
 #include "serializer_with_sort.h"
 #include "smart_malloc.h"
 #include "java_utils.h"
-#include "../../external_merge_sort/external_merge_sort.h"
+#include "../external_merge_sort/external_merge_sort.h"
 
 /**
  * This initial offset is the initial size for storing the key and the value within the same block within the value index
@@ -53,8 +53,10 @@ class virtual_key_value_store : public virtual_sorter, public serializer_with_so
     smart_malloc malloced;
 
 public:
-    virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile);
-    virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile);
+    virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile,
+                            bool use_secondary);
+    virtual_key_value_store(uint_fast64_t fixed_size, const std::string &valuesFile,
+                            bool use_secondary);
 
     /**
      * Now the user has only to compare the keys as a definition. All the values are ignored.

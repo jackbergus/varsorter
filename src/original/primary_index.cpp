@@ -23,7 +23,12 @@
 // Created by giacomo on 08/05/19.
 //
 
-#include "index.h"
+#include "original/primary_index.h"
 
-index::index() {}
-index::index(uint_fast64_t begin, uint_fast64_t end) : begin(begin), end(end) {}
+primary_index::primary_index() : begin{0}, end{0} {}
+primary_index::primary_index(uint_fast64_t begin, uint_fast64_t end) : begin(begin), end(end) {}
+
+
+secondary_index::secondary_index() : id{0}, offset_begin{0} {}
+secondary_index::secondary_index(uint_fast64_t id, uint_fast64_t begin) : id(id), offset_begin(begin) {}
+

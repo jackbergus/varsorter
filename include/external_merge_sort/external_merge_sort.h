@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include "../src/original/serializer_with_sort.h"
-#include "../src/original/smart_malloc.h"
+#include "original/serializer_with_sort.h"
+#include "original/smart_malloc.h"
 #include "quicksort.h"
 
 struct void_virtual_sorter : public  virtual_sorter {
@@ -58,7 +58,7 @@ struct miniheap_iovec {
  */
 template <typename QuicksortComparator> class external_merge_sort {
     struct quicksort<QuicksortComparator> q;
-    bool isFixedSize;
+    bool isFixedSize, useSecondaryIndex;
     uint_fast64_t data_block_fixed_size;
 
     /**
@@ -77,58 +77,59 @@ template <typename QuicksortComparator> class external_merge_sort {
         size_t num_ways, full;
         size_t completed = 0;
 
+        // Determining the size of the chunks, and the number of the file chunks
         if (isFixedSize) {
             opener.openvirtual_sorter(data_block_fixed_size, input_file);
             full = (opener.data_serialized_file / data_block_fixed_size);
             num_ways = (opener.data_serialized_file / data_block_fixed_size) / run_size;
         } else {
             opener.openvirtual_sorter(input_index_file, input_file);
-            full = (opener.struct_index_size / (sizeof(struct index)));
+            full = (opener.struct_primary_index_size / (sizeof(struct primary_index)));
             num_ways = full / run_size;
         }
 
         // output scratch files;
         out.reserve(num_ways);
-
-        for (int i = 0; i < num_ways; i++)
+        for (size_t i = 0; i < num_ways; i++)
         {
-            // convert i to string
+            // Creating the i-th file
             std::string filename_value = std::to_string(i) + ".value";
 
             if (isFixedSize) {
                 // Open output files in write mode.
-                out.emplace_back(data_block_fixed_size, filename_value);
+                out.emplace_back(data_block_fixed_size, filename_value, useSecondaryIndex);
                 out.rbegin()->sorter = new void_virtual_sorter();
             } else {
                 std::string filename_index = std::to_string(i) + ".idx";
-                // Open output files in write mode.
-                out.emplace_back(filename_index, filename_value);
+                // Open output files in write mode, alongside with the secondary index information
+                out.emplace_back(filename_index, filename_value, useSecondaryIndex);
                 out.rbegin()->sorter = new void_virtual_sorter();
             }
         }
 
         // allocate a dynamic array large enough
         // to accommodate runs of size run_size
-        std::vector<smart_malloc> arr;
-        arr.reserve(run_size);
-        //int* arr = (int*)malloc(run_size * sizeof(int));
+        std::vector<smart_malloc> in_memory_file_copy{(size_t)run_size};
 
         bool more_input = true;
         int next_output_file = 0;
 
         int i;
+        // Scanning the whole file: opening the scanner.
         virtual_sorter::iterator ptr = opener.begin(), fini = opener.end();
         while (completed != full) {
             // write run_size elements into arr from input file
             int currentSize = 0;
             for (i = 0; i < run_size; i++) {
+                // Terminate the iteration if I finished to scan the file
                 if (ptr == fini || ptr->iov_base == nullptr) {
                     break;
                 } else {
                     if (!next_output_file) {
-                        arr.emplace_back();
+                        in_memory_file_copy.emplace_back();
                     }
-                    arr[i].docopy(*ptr);
+                    in_memory_file_copy[i].id = ptr.getCurrentPosition();
+                    in_memory_file_copy[i].docopy(*ptr);
                     completed++;
                     ptr++;
                     currentSize++;
@@ -136,20 +137,21 @@ template <typename QuicksortComparator> class external_merge_sort {
             }
 
             // TODO: in parallel
-            q.do_quicksort(arr, currentSize);
+            q.do_quicksort(in_memory_file_copy, currentSize);
 
             // write the records to the appropriate scratch output file
             // can't assume that the loop runs to run_size
             // since the last run's length may be less than run_size
             for (int j = 0; j < currentSize; j++) {
-                out[next_output_file].insert(arr[j].malloced_iovec);
+                // in the meantime, writing the secondary memory index
+                out[next_output_file].insert(in_memory_file_copy[j].malloced_iovec, &in_memory_file_copy[j].id);
             }
             //out[next_output_file].close();
             next_output_file++;
         }
 
         // Forcing to free the memory
-        for (smart_malloc& toReset : arr)
+        for (smart_malloc& toReset : in_memory_file_copy)
             toReset.moved = false;
 
         // close input and output files
@@ -167,7 +169,7 @@ template <typename QuicksortComparator> class external_merge_sort {
  */
    void mergeFiles(std::string &out_filename, std::string &out_index, std::vector<serializer_with_sort> &in) {
         // FINAL OUTPUT FILE
-        inserter out;
+        inserter out(false);
 
         if (isFixedSize) {
             out.open(data_block_fixed_size, out_filename);
@@ -190,6 +192,7 @@ template <typename QuicksortComparator> class external_merge_sort {
             if (ptr == end)
                 break;
             else {
+
                 minheap.emplace(ptr->iov_base, ptr->iov_len, i);
             }
         }
@@ -234,31 +237,32 @@ template <typename QuicksortComparator> class external_merge_sort {
 
 public:
 
-    external_merge_sort() {
-       isFixedSize = false;
-       data_block_fixed_size = 0;
-    }
+    external_merge_sort(bool use_secondary) : isFixedSize{false}, data_block_fixed_size{0}, useSecondaryIndex{use_secondary}
+    { }
 
-    external_merge_sort(uint_fast64_t data_block) : data_block_fixed_size{data_block} {
-       isFixedSize = true;
-    }
+    external_merge_sort(uint_fast64_t data_block, bool use_secondary) : data_block_fixed_size{data_block}, isFixedSize{true}, useSecondaryIndex{use_secondary}
+    { }
 
     /**
      * Before running the method, ensure that these two files are closed
-     * @param values
-     * @param index
+     * @param values_path
+     * @param primary_index_path
      * @param run_size
      */
-    void run(std::string& values, std::string& index, size_t run_size) {
-        std::vector<serializer_with_sort> vectore;
-        createInitialRuns(values, index, run_size, vectore);
+    void run(std::string& values_path, std::string& primary_index_path, size_t run_size) {
+
+
+        std::vector<serializer_with_sort> splitted_sorted_files;
+        createInitialRuns(values_path, primary_index_path, run_size, splitted_sorted_files);
+
         std::string out_filename{"temp.txt"};
         std::string out_index{"temp.idx"};
-        mergeFiles(out_filename, out_index, vectore);
-        unlink(index.c_str());
-        unlink(values.c_str());
-        rename(out_filename.c_str(), values.c_str());
-        rename(out_index.c_str(), index.c_str());
+        mergeFiles(out_filename, out_index, splitted_sorted_files);
+
+        unlink(primary_index_path.c_str());
+        unlink(values_path.c_str());
+        rename(out_filename.c_str(), values_path.c_str());
+        rename(out_index.c_str(), primary_index_path.c_str());
     }
 
 };

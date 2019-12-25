@@ -26,7 +26,7 @@
 
 #include <bits/types/struct_iovec.h>
 #include <cstdint>
-#include "index.h"
+#include "primary_index.h"
 #include "smart_malloc.h"
 
 /**
@@ -39,9 +39,9 @@
 struct smart_index_pointer {
     smart_malloc malloc;
     struct iovec tmp;
-    struct index* external_pointer;
+    struct primary_index* external_pointer;
     uint_fast64_t fix_block_size;
-    struct index unthread_safe;
+    struct primary_index unthread_safe;
 
     smart_index_pointer();
 
@@ -49,7 +49,7 @@ struct smart_index_pointer {
      * External memory evaluation
      * @param externalPointer
      */
-    smart_index_pointer(struct index *externalPointer);
+    smart_index_pointer(struct primary_index *externalPointer);
 
     /**
      * Offset mimicking
@@ -57,7 +57,7 @@ struct smart_index_pointer {
      */
     smart_index_pointer(uint_fast64_t fixBlockSize);
 
-    void open(struct index* ptr);
+    void open(struct primary_index* ptr);
     void open(uint_fast64_t len);
 
     /**
@@ -65,7 +65,7 @@ struct smart_index_pointer {
      * @param id
      * @return
      */
-    struct index* operator[](const uint_fast64_t& id);
+    struct primary_index* operator[](const uint_fast64_t& id);
 
     /**
      * Assumes that it is safe to swap the two elements in externalMemory without any data boundary check (e.g., all

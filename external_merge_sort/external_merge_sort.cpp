@@ -21,9 +21,9 @@
 // Created by giacomo on 08/05/19.
 //
 
-#include "external_merge_sort.h"
+#include "external_merge_sort/external_merge_sort.h"
 
-void_virtual_sorter::void_virtual_sorter() {}
+void_virtual_sorter::void_virtual_sorter() : virtual_sorter(false) {}
 
 int void_virtual_sorter::compare(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
     return 0;

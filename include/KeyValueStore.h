@@ -42,20 +42,23 @@ template <typename QuicksortLessComparatorForKeys> class KeyValueStore : public 
 public:
     size_t bigThreshold = 10000;
     size_t runSize =      10000000;
-    KeyValueStore(const std::string indexFile, const std::string valuesFile) : virtual_key_value_store(indexFile,
-                                                                                                        valuesFile), ems{} {
+    KeyValueStore(const std::string indexFile, const std::string valuesFile, bool use_secondary)
+            : virtual_key_value_store(indexFile,
+                                      valuesFile,
+                                      use_secondary), ems{use_secondary} {
         sorter = this;
     }
 
-    KeyValueStore(uint_fast64_t fixed_size, const std::string &valuesFile) : virtual_key_value_store(fixed_size,
-                                                                                                         valuesFile), ems{fixed_size} {
+    KeyValueStore(uint_fast64_t fixed_size, const std::string &valuesFile, bool use_secondary)
+            : virtual_key_value_store(fixed_size,
+                                      valuesFile, use_secondary), ems{fixed_size, use_secondary} {
         sorter = this;
     }
 
-    KeyValueStore() : KeyValueStore{std::tmpnam(nullptr), std::tmpnam(nullptr)} {}
+    KeyValueStore(bool use_secondary) : KeyValueStore{std::tmpnam(nullptr), std::tmpnam(nullptr), use_secondary} {}
 
 
-    KeyValueStore(uint_fast64_t fixed_size) : KeyValueStore{fixed_size, std::tmpnam(nullptr)} {}
+    KeyValueStore(uint_fast64_t fixed_size, bool use_secondary) : KeyValueStore{fixed_size, std::tmpnam(nullptr), use_secondary} {}
 
     int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         keyComparator.compare(lhs, lhs_size,rhs, rhs_size);
@@ -66,13 +69,14 @@ public:
     }
 
     void sortPair() {
-        if ((struct_index_size / sizeof(struct index)-1) > bigThreshold) {
+        if ((struct_primary_index_size / sizeof(struct primary_index) - 1) > bigThreshold) {
             c.close();
             ems.run(this->bulkFile, this->indexFile, runSize);
             openvirtual_sorter(indexFile, bulkFile);
         } else {
             //printIndex();
-            quicksort(0, (virtual_sorter::isFixedSize ? (data_serialized_file / virtual_sorter::fixed_size -1) : (struct_index_size / sizeof(struct index)-1)));
+            uint_fast64_t right = (virtual_sorter::isFixedSize ? (data_serialized_file / virtual_sorter::fixed_size -1) : (struct_primary_index_size / sizeof(struct primary_index) - 1));
+            /*quicksort(0, right);
             // I have to reorder the external memory after reordering the index if and only if the memory was not already in-place
             // sorted, 'cause the data structure is bounded
             if (!virtual_sorter::isFixedSize) {
@@ -80,7 +84,7 @@ public:
                 FILE *f = fopen(sf.c_str(), "w+");
                 // pointer keeping update of how many elements have been written so far.
                 uint_fast64_t init = 0;
-                for (uint_fast64_t i = 0; i < struct_index_size / sizeof(struct index); i++) {
+                for (uint_fast64_t i = 0; i < struct_index_size / sizeof(struct primary_index); i++) {
                     // Ordering the data element according to the index ordering, that is writing in the first position the
                     // element in the first position of the index, which is now the smallest element.
                     fwrite(mmap_kv_File + mmap_index_File[i].begin, mmap_index_File[i].end - mmap_index_File[i].begin, 1, f);
@@ -97,7 +101,8 @@ public:
                 rename(sf.c_str(), bulkFile.c_str());
                 //printIndex();
                 mmap_kv_File = (char *) mmapFile(bulkFile, &data_serialized_file, &fdkvf);
-            } // else, the memory has been already swapped
+            } // else, the memory has been already swapped*/
+            common_sort_pair(right);
         }
 
     }

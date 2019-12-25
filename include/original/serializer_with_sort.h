@@ -35,8 +35,6 @@
 #include <initializer_list>
 
 class serializer_with_sort {
-    std::string index;
-    std::string values;
     bool hasInserted = false;
     bool hasRiskInsert = false;
     bool hasSorted = false;
@@ -52,19 +50,47 @@ class serializer_with_sort {
      * @return          1 if the old value has been overwritten, and 2 if only the old index has been overwritten but the
      *                  old value appended at the end of the file
      */
-    int update_internal(virtual_sorter::iterator &ptr, void *neu, unsigned long newLen);
+    int update_internal(virtual_sorter::iterator &ptr, void *neu, unsigned long newLen,
+                        uint_fast64_t *secondary_ptr);
+
+protected:
+    std::string index_path;
+    std::string values_path;
 public:
     inserter c;
     virtual_sorter* sorter = nullptr;
-    serializer_with_sort(std::string indexFile, std::string valuesFile);
-    serializer_with_sort(uint_fast64_t fixed_size, std::string valuesFile);
+    serializer_with_sort(std::string indexFile, std::string valuesFile, bool use_secondary);
+    serializer_with_sort(uint_fast64_t fixed_size, std::string valuesFile, bool use_secondary);
     ~serializer_with_sort();
 
-    bool risk_insert(struct iovec& ptr);
-    bool risk_insert(void* buff, uint_fast64_t len);
+    bool risk_insert(struct iovec &ptr, uint_fast64_t *secondary_ptr);
+    bool risk_insert(void *buff, uint_fast64_t len, uint_fast64_t *secondary_ptr);
+    template <typename T> size_t risk_insert(const T& obj) {
+        if (hasSorted) {
+            sorter->doclose();
+            hasSorted = false;
+        }
+        if (hasInserted) {
+            if (!hasRiskInsert) {
+                sorter->doclose();
+                c.open(index_path, values_path); // fixed_size aware
+            }
+        } else {
+            c.open(index_path, values_path);  // fixed_size aware
+        }
+        size_t toRet;
+        toRet = c.risk_writeKeyAndValue_with_prev<T>(obj, 0);
+        hasInserted = true;
+        hasRiskInsert = true;
+        return toRet;
+    }
 
     void sortElement();
     void unlink();
+
+    bool usesSecondaryIndex() const {
+        return c.usesSecondaryIndex();
+    }
 
     bool iovec_multiinsert(std::initializer_list<struct iovec> list);
 
@@ -83,9 +109,13 @@ public:
      *                  2 - the element exists = it has been inserted anew and the old index has been overwritten
      *                  -1 - error during the insertion
      */
-    int update(void* old, uint_fast64_t oldLen, void* neu, uint_fast64_t newLen);
-    int insert(void* neu, uint_fast64_t len);
-    int insert(struct new_iovec& x);
+    int update(void *old, uint_fast64_t oldLen, void *neu, uint_fast64_t newLen,
+               uint_fast64_t *secondary_ptr);
+    int insert(void *ptr, uint_fast64_t len, uint_fast64_t *secondary_ptr);
+    int insert(struct new_iovec &x, uint_fast64_t *secondary_ptr);
+    template <typename T> size_t insert(const T& obj) {
+        return risk_insert<T>(obj);
+    }
 
     virtual_sorter::iterator begin();
     virtual_sorter::iterator end();

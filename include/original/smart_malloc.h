@@ -38,6 +38,7 @@ void memory_copy(char *dest, const char *src, size_t n);
 class smart_malloc {
 public:
     struct new_iovec malloced_iovec;
+    uint_fast64_t id;
     bool moved;
 
     smart_malloc();

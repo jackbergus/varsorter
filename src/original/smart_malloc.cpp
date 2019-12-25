@@ -20,7 +20,7 @@
  * along with varsorter. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "smart_malloc.h"
+#include "original/smart_malloc.h"
 
 void memory_copy(char *dest, const char *src, size_t n) {
     size_t i;

@@ -26,7 +26,7 @@
 
 
 #include <vector>
-#include "../src/original/smart_malloc.h"
+#include "original/smart_malloc.h"
 
 template <typename AQuicksortComparator> struct quicksort {
     AQuicksortComparator lessThan{};

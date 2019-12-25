@@ -23,8 +23,8 @@
 // Created by giacomo on 08/05/19.
 //
 
-#include "../src/KeyValueStore.h"
-#include "../external_merge_sort/ExternalULongPairComparator.h"
+#include "KeyValueStore.h"
+#include "external_merge_sort/ExternalULongPairComparator.h"
 
 extern "C" {
 #include <unistd.h>
@@ -38,7 +38,7 @@ int main(void) {
     unlink(index.c_str());
     unlink(values.c_str());
                                                 // The data block now consists of the offsets to the elements, and then for the two values that we are serializing.
-    KeyValueStore<ExternalULongPairComparator> c{16, values};
+    KeyValueStore<ExternalULongPairComparator> c{16, values, false};
 
     //virtual_key_value_store c{index.c_str(), values.c_str()};
     // No. of Partitions of input file.
@@ -52,7 +52,7 @@ int main(void) {
         arr[0] = rand();
         if (!i) F = arr[0];
         arr[1] = rand();
-        c.insert(&arr, 16);
+        c.insert(&arr, 16, nullptr);
         std::cout << arr[0] << ":" << arr[1] << std::endl;
     }
     std::cout << "Closing file & sorting" << std::endl;

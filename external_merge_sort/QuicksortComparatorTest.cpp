@@ -21,7 +21,7 @@
 // Created by giacomo on 01/05/19.
 //
 
-#include "QuicksortComparatorTest.h"
+#include "external_merge_sort/QuicksortComparatorTest.h"
 
 bool QuicksortComparatorTest::greaterThan(void *leftM, size_t leftS, void *rightM, size_t rightS) {
     std::string safeL{(const char *) leftM, leftS};

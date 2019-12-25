@@ -1,5 +1,5 @@
 /*
- * QuicksortLessComparator.h
+ * QuicksortLessComparatorKeyValue.h
  * This file is part of varsorter
  *
  * Copyright (C) 2019 - Giacomo Bergami
@@ -24,23 +24,24 @@
 #ifndef VARSORTER_QUICKSORTLESSCOMPARATOR_H
 #define VARSORTER_QUICKSORTLESSCOMPARATOR_H
 
-#include "../src/original/java_utils.h"
-#include "../src/original/smart_malloc.h"
-#include "external_merge_sort.h"
+#include "../original/java_utils.h"
+#include "../original/smart_malloc.h"
+#include "external_merge_sort_example.h"
 
-ABSTRACT_CLASS QuicksortLessComparator {
+ABSTRACT_CLASS QuicksortLessComparatorKeyValue {
 public:
-    ABSTRACT bool greaterThan(void* leftM, size_t leftS, void* rightM, size_t rightS) = 0;
-    bool lessThan(void* leftM, size_t leftS, void* rightM, size_t rightS) {
-        return greaterThan(rightM, rightS, leftM, leftS);
-    }
-    int compare(void* leftM, size_t leftS, void* rightM, size_t rightS) {
-        if (lessThan(leftM, leftS, rightM, rightS))
-            return -1;
-        else if (greaterThan(leftM, leftS, rightM, rightS))
-            return 1;
-        else
-            return 0;
+    ABSTRACT bool compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) = 0;
+    bool greaterThan(void* lhs, size_t leftS, void* rhs, size_t rightS) {
+        // size vectors associated to both the key and the value
+        auto* lptr = (uint_fast64_t*)lhs;
+        auto* rptr = (uint_fast64_t*)rhs;
+        // pointing to the key, and setting each key size (from the offset)
+        return compareKeys(
+                (char*)lhs+(sizeof(uint_fast64_t)*2),
+                lptr[0],
+                (char*)rhs+(sizeof(uint_fast64_t)*2),
+                rptr[0]
+        );
     }
     bool operator()(miniheap_iovec &l, miniheap_iovec &r) {
         greaterThan(l.iovec.iov_base, l.iovec.iov_len, r.iovec.iov_base, r.iovec.iov_len);

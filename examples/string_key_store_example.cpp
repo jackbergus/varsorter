@@ -22,7 +22,7 @@
 
  
 
-#include "../src/original/virtual_key_value_store.h"
+#include "original/virtual_key_value_store.h"
 
 /**
  * Using a custom way to define a comparator, without associating an external comparator.
@@ -30,7 +30,8 @@
 class string_kvcmp : public virtual_key_value_store {
 public:
     string_kvcmp(const std::string &indexFile, const std::string &valuesFile) : virtual_key_value_store(indexFile,
-                                                                                                        valuesFile) {}
+                                                                                                        valuesFile,
+                                                                                                        false) {}
     int compareKeys(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         int toret = strncmp(static_cast<const char *>(lhs), static_cast<const char *>(rhs), lhs_size < rhs_size ? lhs_size : rhs_size);
         if (lhs_size == rhs_size)

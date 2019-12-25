@@ -24,7 +24,7 @@
 
 #include <cstring>
 #include <iostream>
-#include "mmapFile.h"
+#include "original/mmapFile.h"
 
 void* mmapFile(std::string file, unsigned long* size, int* fd) {
     struct stat filestatus;

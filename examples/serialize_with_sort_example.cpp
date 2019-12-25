@@ -22,12 +22,12 @@
 
  
 
-#include "../src/original/virtual_sorter.h"
-#include "../src/original/serializer_with_sort.h"
+#include "original/virtual_sorter.h"
+#include "original/serializer_with_sort.h"
 
 class string_sorter : public virtual_sorter {
 public:
-    string_sorter() : virtual_sorter() {}
+    string_sorter() : virtual_sorter(false) {}
 
     int compare(void *lhs, uint_fast64_t lhs_size, void *rhs, uint_fast64_t rhs_size) {
         int toret = strncmp(static_cast<const char *>(lhs), static_cast<const char *>(rhs), lhs_size < rhs_size ? lhs_size : rhs_size);
@@ -45,7 +45,7 @@ public:
  * @param c         serializer
  * @param x         string to be written
  */
-#define write_string2(c,x)  c.risk_insert((void*)x.c_str(),x.length())
+#define write_string2(c,x)  c.risk_insert((void*)x.c_str(),x.length(), nullptr)
 
 int main() {
     // File that will contain the values
@@ -58,7 +58,7 @@ int main() {
     unlink(file1.c_str());
 
     // Opening the file
-    serializer_with_sort c{file2, file1};
+    serializer_with_sort c{file2, file1, false};
 
     // Associating a sorter for sorting the values
     c.sorter = new string_sorter();

@@ -28,7 +28,7 @@
 
 #include <cstdint>
 #include <cstdio>
-#include "index.h"
+#include "primary_index.h"
 #include <string>
 #include <fstream>
 #include <string>
@@ -36,19 +36,28 @@
 #include <bits/types/struct_iovec.h>
 
 class inserter {
-    inserter(uint_fast64_t fixed_size, bool isFixedSize);
+    inserter(uint_fast64_t fixed_size, bool isFixedSize, bool secondary_use);
 
-    struct index toSerialize;
-    std::string file, index;
+    struct primary_index toSerialize;
+    std::string primary_index_file;
+
+    struct secondary_index toTmpSerialize;
+    std::string secondary_index_file;
+
+    std::string values_file;
     bool hasFixedSizeInput;
+    bool useSecondaryIndex;
     uint_fast64_t fixed_size;
 
 public:
-    FILE* fdIndex;
+    FILE* fdPrimaryIndex;
+    FILE* fdSecondaryIndex;
     FILE* fdKeyValueStorage;
-    inserter();
-    inserter(uint_fast64_t fixed_size);
+    inserter(bool secondary_use);
+    inserter(uint_fast64_t fixed_size, bool secondary_use);
     ~inserter();
+
+    bool usesSecondaryIndex() const;
 
     /**
      * Opening the data structures underneath, if not already opened. This method is also fixed_size aware.
@@ -72,9 +81,26 @@ public:
 
     void writeKeyAndValue(struct new_iovec& );
     void writeKeyAndValue(struct iovec& );
-    void writeKeyAndValue(void* mem, uint_fast64_t size);
+    void writeKeyAndValue(void *mem, uint_fast64_t size, uint_fast64_t *secondary_ptr);
     void risk_writeKeyAndValue_noindex(void* mem, uint_fast64_t size);
-    void risk_writeKeyAndValue_with_prev(void *mem, uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size);
+    void risk_writeKeyAndValue_with_prev(void *mem, uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size,
+                                         uint_fast64_t *secondary_ptr);
+
+    /**
+     * Serializing a primary memory object with a default serializer
+     * @tparam T                        Type having a size_t serialize(FILE* ptr) method
+     * @param obj                       Object with the default serializer
+     * @param risk_prev_inserted_size   ???
+     */
+    template <typename T> size_t risk_writeKeyAndValue_with_prev(const T& obj, uint_fast64_t risk_prev_inserted_size) {
+        size_t mem_size = obj.serialize(fdKeyValueStorage);
+        fflush(fdKeyValueStorage);
+        write_indexing_structures(mem_size, risk_prev_inserted_size, nullptr);
+    }
+
+private:
+    void write_indexing_structures(uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size,
+                                   uint_fast64_t *id_ptr);
 };
 
 

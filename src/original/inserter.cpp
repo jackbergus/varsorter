@@ -23,21 +23,26 @@
  
 
 
-#include "inserter.h"
-#include "new_iovec.h"
+#include "original/inserter.h"
+#include "original/new_iovec.h"
 
 extern "C" {
 #include <unistd.h>
 }
 
-inserter::inserter() : inserter{0, false} {}
+inserter::inserter(bool secondary_use) : inserter{0, false, secondary_use} {}
 
-inserter::inserter(uint_fast64_t fixed_size) : inserter{fixed_size, true} { }
+inserter::inserter(uint_fast64_t fixed_size, bool secondary_use) : inserter{fixed_size, true, secondary_use} { }
 
-inserter::inserter(uint_fast64_t fixed_size, bool isFixedSize) {
+inserter::inserter(uint_fast64_t fixed_size, bool isFixedSize, bool secondary_use) {
     toSerialize.begin = 0;
     toSerialize.end = 0;
-    fdIndex = nullptr;
+    toSerialize.id = 0;
+    toTmpSerialize.id = 0;
+    toTmpSerialize.offset_begin = 0;
+    useSecondaryIndex = secondary_use;
+    fdPrimaryIndex = nullptr;
+    fdSecondaryIndex = nullptr;
     fdKeyValueStorage = nullptr;
     hasFixedSizeInput = isFixedSize;
     this->fixed_size = fixed_size;
@@ -45,58 +50,81 @@ inserter::inserter(uint_fast64_t fixed_size, bool isFixedSize) {
 
 void inserter::open(std::string indexFile, std::string kvFile) {
     close();
-    if (!hasFixedSizeInput)
-        fdIndex = fopen(indexFile.c_str(), "a+");
+    if (!hasFixedSizeInput) {
+        fdPrimaryIndex = fopen(indexFile.c_str(), "a+");
+        std::string secondaryFile = indexFile + "_secondary";
+        if (useSecondaryIndex)
+            fdSecondaryIndex = fopen(secondaryFile.c_str(), "a+");
+    }
     fdKeyValueStorage = fopen(kvFile.c_str(), "a+");
-    index = indexFile;
-    file = kvFile;
+    primary_index_file = indexFile;
+    values_file = kvFile;
 }
 
 void inserter::open(uint_fast64_t fixed_size, std::string kvFile) {
     close();
     hasFixedSizeInput = true;
-    fdIndex = nullptr;
+    fdPrimaryIndex = nullptr;
+    fdSecondaryIndex = nullptr;
     this->fixed_size = fixed_size;
     fdKeyValueStorage = fopen(kvFile.c_str(), "a+");
-    index = "";
-    file = kvFile;
+    primary_index_file = "";
+    values_file = kvFile;
 }
 
 void inserter::close() {
-    if (fdIndex) {
-        fclose(fdIndex);
-        fdIndex = 0;
+    if (fdPrimaryIndex) {
+        fclose(fdPrimaryIndex);
+        fdPrimaryIndex = nullptr;
     }
-    if (fdKeyValueStorage) {
-        fclose(fdKeyValueStorage);
-        fdKeyValueStorage = 0;
-    }
-}
-
-void inserter::writeKeyAndValue(void *mem, uint_fast64_t size) {
-    risk_writeKeyAndValue_with_prev(mem,size,0);
-}
-
-void inserter::risk_writeKeyAndValue_with_prev(void *mem, uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size) {
-    fwrite(mem, mem_size, 1, fdKeyValueStorage);
-    fflush(fdKeyValueStorage);
-    if (!hasFixedSizeInput) {
-        toSerialize.begin = toSerialize.end;
-        toSerialize.end = toSerialize.begin + risk_prev_inserted_size + mem_size;
-        fwrite(&toSerialize,sizeof(struct index),1,fdIndex);
-    }
-}
-
-inserter::~inserter() {
-    if (fdIndex) {
-        fclose(fdIndex);
-        fdIndex = nullptr;
+    if (fdSecondaryIndex) {
+        fclose(fdSecondaryIndex);
+        fdSecondaryIndex = nullptr;
     }
     if (fdKeyValueStorage) {
         fclose(fdKeyValueStorage);
         fdKeyValueStorage = nullptr;
     }
-    fdIndex = nullptr;
+}
+
+void inserter::writeKeyAndValue(void *mem, uint_fast64_t size, uint_fast64_t *secondary_ptr) {
+    risk_writeKeyAndValue_with_prev(mem, size, 0, secondary_ptr);
+}
+
+void inserter::risk_writeKeyAndValue_with_prev(void *mem, uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size,
+                                               uint_fast64_t *secondary_ptr) {
+    fwrite(mem, mem_size, 1, fdKeyValueStorage);
+    fflush(fdKeyValueStorage);
+    write_indexing_structures(mem_size, risk_prev_inserted_size, secondary_ptr);
+}
+
+void inserter::write_indexing_structures(uint_fast64_t mem_size, uint_fast64_t risk_prev_inserted_size,
+                                         uint_fast64_t *id_ptr) {
+    if (!hasFixedSizeInput) {
+        toSerialize.id ++;
+        toSerialize.begin = toSerialize.end;
+        toSerialize.end = toSerialize.begin + risk_prev_inserted_size + mem_size;
+        fwrite(&toSerialize, sizeof(struct primary_index), 1, fdPrimaryIndex);
+        if (useSecondaryIndex) {
+            id_ptr ? (toTmpSerialize.id = *id_ptr) : (toTmpSerialize.id++);
+            toTmpSerialize.offset_begin = toSerialize.begin;
+            fwrite(&toTmpSerialize, sizeof(struct secondary_index), 1, fdSecondaryIndex);
+        }
+    }
+}
+
+inserter::~inserter() {
+    if (fdPrimaryIndex) {
+        fclose(fdPrimaryIndex);
+    }
+    if (fdSecondaryIndex) {
+        fclose(fdSecondaryIndex);
+    }
+    if (fdKeyValueStorage) {
+        fclose(fdKeyValueStorage);
+    }
+    fdSecondaryIndex = nullptr;
+    fdPrimaryIndex = nullptr;
     fdKeyValueStorage = nullptr;
 }
 
@@ -105,15 +133,25 @@ void inserter::risk_writeKeyAndValue_noindex(void *mem, uint_fast64_t size) {
 }
 
 void inserter::writeKeyAndValue(struct new_iovec &x) {
-    writeKeyAndValue(x.iov_base, x.iov_len);
+    writeKeyAndValue(x.iov_base, x.iov_len, nullptr);
 }
 
 void inserter::writeKeyAndValue(struct iovec &x) {
-    writeKeyAndValue(x.iov_base, x.iov_len);
+    writeKeyAndValue(x.iov_base, x.iov_len, nullptr);
 }
 
 void inserter::dounlink() {
     close();
-    unlink(file.c_str());
-    unlink(index.c_str());
+    unlink(values_file.c_str());
+    if (!hasFixedSizeInput) {
+        unlink(primary_index_file.c_str());
+        if (useSecondaryIndex) {
+            std::string sec = primary_index_file + "_secondary";
+            unlink(sec.c_str());
+        }
+    }
+}
+
+bool inserter::usesSecondaryIndex() const {
+    return useSecondaryIndex;
 }

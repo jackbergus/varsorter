@@ -22,7 +22,7 @@
 // Created by giacomo on 08/05/19.
 //
 
-#include "ExternalULongPairComparator.h"
+#include "external_merge_sort/ExternalULongPairComparator.h"
 
 
 #define get(ptr, size)  (*(((size) == sizeof(uint_fast64_t)*2) ? ((uint_fast64_t*)((char*)(ptr))) : ((uint_fast64_t*)(ptr))))

@@ -25,11 +25,11 @@ extern "C" {
 #include <iostream>
 #include <sstream>
 #include "examples.h"
-#include "../src/original/java_utils.h"
-#include "../src/original/serializer_with_sort.h"
-#include "../src/original/smart_malloc.h"
-#include "../external_merge_sort/external_merge_sort.h"
-#include "../external_merge_sort/QuicksortComparatorTest.h"
+#include "original/java_utils.h"
+#include "original/serializer_with_sort.h"
+#include "original/smart_malloc.h"
+#include "external_merge_sort/external_merge_sort.h"
+#include "external_merge_sort/QuicksortComparatorTest.h"
 
 
 /**
@@ -37,7 +37,7 @@ extern "C" {
  * @param c         serializer
  * @param x         string to be written
  */
-#define write_string2(c,x)  c.risk_insert((void*)x.c_str(),x.length())
+#define write_string2(c,x)  c.risk_insert((void*)x.c_str(),x.length(),nullptr)
 
 /**
  * The only purpose of this main is to run some examples, and to show that the current code works :)
@@ -75,7 +75,7 @@ int main() {
         unlink(file2.c_str());
         unlink(file1.c_str());
         // Opening the file
-        serializer_with_sort c{file2, file1};
+        serializer_with_sort c{file2, file1, false};
         // No. of Partitions of input file.
         int num_ways = 2;
         // The size of each partition
@@ -88,7 +88,7 @@ int main() {
         }
 
         c.c.close();
-        external_merge_sort<QuicksortComparatorTest> ems;
+        external_merge_sort<QuicksortComparatorTest> ems{false};
         ems.run(file1, file2, num_ways);
         c.sorter = new void_virtual_sorter();
         for (virtual_sorter::iterator it = c.begin(); it != c.end(); it++ ) {

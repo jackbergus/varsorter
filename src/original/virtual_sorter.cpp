@@ -21,7 +21,8 @@
  */
 
 
-#include "virtual_sorter.h"
+#include <cassert>
+#include "original/virtual_sorter.h"
 
 #define swap(p,left) \
      do {\
@@ -37,7 +38,7 @@
         } \
     }while(0)\
 
-#define END_SIZE            (isFixedSize ? (data_serialized_file / fixed_size -1) : (struct_index_size / sizeof(struct index)-1))
+#define END_SIZE            (isFixedSize ? (data_serialized_file / fixed_size -1) : (struct_primary_index_size / sizeof(struct primary_index)-1))
 #define OBJECT_POINTER(m)   (isFixedSize ? fixed_size * m : mmap_index_File[m].begin)
 #define OBJECT_SIZE(m)      (isFixedSize ? fixed_size : mmap_index_File[m].end-mmap_index_File[m].begin)
 
@@ -71,14 +72,23 @@ void virtual_sorter::quicksort( uint_fast64_t left, uint_fast64_t right) {
 
 void virtual_sorter::printIndex() {
     for (uint_fast64_t i = 0; i< 1+END_SIZE; i++) {
-        std::cout << mmap_index_File[i].begin << "-->" << mmap_index_File[i].end << std::endl;
+        std::cout << mmap_index_File[i].begin << "-->" << mmap_index_File[i].end;
+        if (useSecondaryIndex) {
+            std::cout << " ~~ " << " id = " << mmap_2index_File[i].id;
+        }
+        std::cout << std::endl;
     }
 }
 
 
 void virtual_sorter::sortPair() {
     //printIndex();
-    quicksort(0, END_SIZE);
+    uint_fast64_t right = END_SIZE;
+    common_sort_pair(right);
+}
+
+void virtual_sorter::common_sort_pair(uint_fast64_t right) {
+    quicksort(0, right);
     // I have to reorder the external memory after reordering the index if and only if the memory was not already in-place
     // sorted, 'cause the data structure is bounded
     if (!isFixedSize) {
@@ -86,36 +96,45 @@ void virtual_sorter::sortPair() {
         FILE *f = fopen(sf.c_str(), "w+");
         // pointer keeping update of how many elements have been written so far.
         uint_fast64_t init = 0;
-        for (uint_fast64_t i = 0; i < struct_index_size / sizeof(struct index); i++) {
+        uint_fast64_t id = 0;
+        for (uint_fast64_t i = 0; i < struct_primary_index_size / sizeof(struct primary_index); i++) {
             // Ordering the data element according to the index ordering, that is writing in the first position the
             // element in the first position of the index, which is now the smallest element.
             fwrite(mmap_kv_File + mmap_index_File[i].begin, mmap_index_File[i].end - mmap_index_File[i].begin, 1, f);
             // updating the index data structure
             mmap_index_File[i].end = mmap_index_File[i].end - mmap_index_File[i].begin + init;
             mmap_index_File[i].begin = init;
+            id = mmap_index_File[i].id;
+            assert(mmap_2index_File[id].id == id);
+            mmap_2index_File[id].offset_begin = init;
             init = mmap_index_File[i].end;
         }
         fclose(f);
         // Closing the old unsorted file
-        close(fdkvf);
+        close(fd_keyvalye);
         munmap(mmap_kv_File, data_serialized_file);
-        fdkvf = 0;
+        fd_keyvalye = 0;
         rename(sf.c_str(), bulkFile.c_str());
         //printIndex();
-        mmap_kv_File = (char *) mmapFile(bulkFile, &data_serialized_file, &fdkvf);
+        mmap_kv_File = (char *) mmapFile(bulkFile, &data_serialized_file, &fd_keyvalye);
     } // else, the memory has been already swapped
 }
 
 virtual_sorter::~virtual_sorter() {
-    if (fdmif) {
-        close(fdmif);
-        munmap(mmap_index_File, struct_index_size);
-        fdmif = 0;
+    if (fd_primary_index) {
+        close(fd_primary_index);
+        munmap(mmap_index_File, struct_primary_index_size);
+        fd_primary_index = 0;
     }
-    if (fdkvf) {
-        close(fdkvf);
+    if (fd_secondary_index) {
+        close(fd_secondary_index);
+        munmap(mmap_2index_File, struct_secondary_index_size);
+        fd_secondary_index = 0;
+    }
+    if (fd_keyvalye) {
+        close(fd_keyvalye);
         munmap(mmap_kv_File, data_serialized_file);
-        fdkvf = 0;
+        fd_keyvalye = 0;
     }
 }
 void virtual_sorter::openIfRequired(std::string indexFile, std::string kvFile) {
@@ -123,8 +142,12 @@ void virtual_sorter::openIfRequired(std::string indexFile, std::string kvFile) {
         doclose();
         bulkFile = kvFile;
         this->indexFile = indexFile;
-        mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fdkvf);
-        mmap_index_File = (struct index*)mmapFile(indexFile, &struct_index_size, &fdmif);
+        mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fd_keyvalye);
+        mmap_index_File = (struct primary_index*)mmapFile(indexFile, &struct_primary_index_size, &fd_primary_index);
+        if (useSecondaryIndex) {
+            std::string secondary = indexFile+"_secondary";
+            mmap_2index_File = (struct secondary_index*)mmapFile(secondary, &struct_secondary_index_size, &fd_secondary_index);
+        }
         this->ptr_arr.open(mmap_index_File);
         isOpen = true;
     }
@@ -136,24 +159,29 @@ void virtual_sorter::openIfRequired(uint_fast64_t fixed_size, std::string kvFile
         if (this->fixed_size != fixed_size)
             ptr_mem_tmp.domalloc(fixed_size);
         bulkFile = kvFile;
-        this->indexFile = indexFile;
-        mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fdkvf);
+        //this->indexFile = indexFile; --
+        mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fd_keyvalye);
         mmap_index_File = nullptr;
+        mmap_2index_File = nullptr;
         this->fixed_size = fixed_size;
         this->ptr_arr.open(fixed_size);
         isOpen = true;
     }
 }
 
-void virtual_sorter::openvirtual_sorter(std::string indexFile, std::string kvFile) {
+void virtual_sorter::openvirtual_sorter(std::string primaryIndex_file, std::string kvFile) {
     if (isOpen) {
         doclose();
     }
     isFixedSize = false;
     bulkFile = kvFile;
-    this->indexFile = indexFile;
-    mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fdkvf);
-    mmap_index_File = (struct index*)mmapFile(indexFile, &struct_index_size, &fdmif);
+    this->indexFile = primaryIndex_file;
+    mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fd_keyvalye);
+    mmap_index_File = (struct primary_index*)mmapFile(primaryIndex_file, &struct_primary_index_size, &fd_primary_index);
+    if (useSecondaryIndex) {
+        this->secondaryFile = indexFile + "_secondary";
+        mmap_2index_File = (struct secondary_index*)mmapFile(secondaryFile, &struct_secondary_index_size, &fd_secondary_index);
+    }
     this->ptr_arr.open(mmap_index_File);
     isOpen = true;
 }
@@ -169,43 +197,54 @@ void virtual_sorter::openvirtual_sorter(uint_fast64_t fixed_size, std::string kv
     this->fixed_size = fixed_size;
     this->ptr_arr.open(fixed_size);
     bulkFile = kvFile;
-    mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fdkvf);
+    mmap_kv_File = (char*)mmapFile(kvFile, &data_serialized_file, &fd_keyvalye);
     mmap_index_File = nullptr;
+    mmap_2index_File = nullptr;
     isOpen = true;
 }
 
 void virtual_sorter::doclose() {
     if (isOpen) {
-        if (fdmif) {
-            close(fdmif);
-            munmap(mmap_index_File, struct_index_size);
+        if (fd_primary_index) {
+            close(fd_primary_index);
+            munmap(mmap_index_File, struct_primary_index_size);
             mmap_index_File = nullptr;
-            struct_index_size = 0;
-            fdmif = 0;
+            struct_primary_index_size = 0;
+            fd_primary_index = 0;
         }
-        if (fdkvf) {
-            close(fdkvf);
+        if (fd_keyvalye) {
+            close(fd_keyvalye);
             munmap(mmap_kv_File, data_serialized_file);
             mmap_kv_File = nullptr;
             data_serialized_file = 0;
-            fdkvf = 0;
+            fd_keyvalye = 0;
+        }
+        if (fd_secondary_index) {
+            close(fd_secondary_index);
+            munmap(mmap_2index_File, struct_secondary_index_size);
+            mmap_2index_File = nullptr;
+            struct_secondary_index_size = 0;
+            fd_secondary_index = 0;
         }
         bulkFile.clear();
         isOpen = false;
     }
 }
 
-void virtual_sorter::risk_overwrite(void *i, void *pVoid, uint_fast64_t i1) {
+void virtual_sorter::risk_overwrite_as_memcpy(void *i, void *pVoid, uint_fast64_t i1) {
     memcpy(i, pVoid, i1);
 }
 
-virtual_sorter::virtual_sorter() {
-    struct_index_size = 0;
+virtual_sorter::virtual_sorter(bool uses_secondary) : useSecondaryIndex{uses_secondary} {
     mmap_kv_File = nullptr;
-    fdkvf = 0;
-    fdmif = 0;
     mmap_index_File = nullptr;
+    mmap_2index_File = nullptr;
     data_serialized_file = 0;
+    struct_secondary_index_size = 0;
+    struct_primary_index_size = 0;
+    fd_secondary_index = 0;
+    fd_keyvalye = 0;
+    fd_primary_index = 0;
     bulkFile = "";
     isOpen = false;
 }
@@ -263,6 +302,10 @@ virtual_sorter::iterator virtual_sorter::end(bool isFixedSize) const {
         return iterator(mmap_index_File, END_SIZE, 1+END_SIZE, mmap_kv_File);
 }
 
+bool virtual_sorter::usesSecondaryIndex() const {
+    return useSecondaryIndex;
+}
+
 /*
 
   ___  _                    _
@@ -274,7 +317,7 @@ virtual_sorter::iterator virtual_sorter::end(bool isFixedSize) const {
  */
 
 
-virtual_sorter::iterator::iterator(struct index *mmap_index_File, uint_fast64_t end_index, uint_fast64_t index,
+virtual_sorter::iterator::iterator(struct primary_index *mmap_index_File, uint_fast64_t end_index, uint_fast64_t index,
                                    char *mmap_kv_File)
                                    : mmap_index_File(mmap_index_File), last_element_pos(end_index),
                                                          curr_vect_pos(index), mmap_kv_File(mmap_kv_File) {
@@ -343,7 +386,8 @@ void virtual_sorter::iterator::setNewLen(uint_fast64_t i) {
         std::cerr << "[setNewLen] Warning: when data is on fixed size, I would not need to resize the data underneath" << std::endl;
 }
 
-void virtual_sorter::iterator::updateWith(uint_fast64_t offsetBegin, uint_fast64_t newLen) {
+void
+virtual_sorter::iterator::updateWith(uint_fast64_t offsetBegin, uint_fast64_t newLen) {
     if (!isFixedSize) {
         mmap_index_File[curr_vect_pos].begin = offsetBegin;
         mmap_index_File[curr_vect_pos].end = mmap_index_File[curr_vect_pos].begin + newLen;
@@ -403,10 +447,19 @@ virtual_sorter::iterator &virtual_sorter::iterator::operator++() {
     return *this;
 }
 
-virtual_sorter::iterator virtual_sorter::iterator::operator++(int) {
-    uint_fast64_t currStep = curr_vect_pos++;
+virtual_sorter::iterator virtual_sorter::iterator::operator++(int v) {
+    uint_fast64_t currStep = (curr_vect_pos+=v);
     if (isFixedSize)
         return iterator{fixed_size, last_element_pos, currStep, mmap_kv_File};
     else
         return iterator{mmap_index_File, last_element_pos, currStep, mmap_kv_File};
+}
+
+size_t virtual_sorter::iterator::getCurrentPosition() const {
+    if (isFixedSize) {
+        std::cerr << "WARNING: for fixed size element, this is not the element id before the sorting, but always the current iteration position." << std::endl;
+        return curr_vect_pos;
+    } else {
+        return mmap_index_File[curr_vect_pos].id;
+    }
 }
