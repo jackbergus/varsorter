@@ -20,7 +20,7 @@ This implementation is quite straightforward, and can be refactored and made mor
 
 ## Dependencies
 
-This library requires [yaucl](https://github.com/datagramdb/yaucl): please install it before compile.
+This library requires [yaucl](https://github.com/datagramdb/yaucl): please install it before compiling the project.
 
 ## TODO (?) List:
 1. Some additional unit testing to provide the correctness of the implementation should be provided, too.
