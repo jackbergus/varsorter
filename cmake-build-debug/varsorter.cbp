@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="varsorter"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="external_merge_sort_nummap2">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/external_merge_sort_nummap2" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 external_merge_sort_nummap2"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="external_merge_sort_nummap2/fast">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/external_merge_sort_nummap2" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 external_merge_sort_nummap2/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="external_sorter_example">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/external_sorter_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 external_sorter_example"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="external_sorter_example/fast">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/external_sorter_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 external_sorter_example/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="external_merge_sort_nummap">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/external_merge_sort_nummap" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 external_merge_sort_nummap"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="external_merge_sort_nummap/fast">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/external_merge_sort_nummap" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 external_merge_sort_nummap/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="string_key_store_example">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/string_key_store_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 string_key_store_example"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="string_key_store_example/fast">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/string_key_store_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 string_key_store_example/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="serialize_with_sort_example">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/serialize_with_sort_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 serialize_with_sort_example"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="serialize_with_sort_example/fast">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/serialize_with_sort_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 serialize_with_sort_example/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libvarsorter">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/liblibvarsorter.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 libvarsorter"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libvarsorter/fast">
+				<Option output="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/liblibvarsorter.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 libvarsorter/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/examples/external_merge_sort_example.cpp">
+			<Option target="external_sorter_example"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/examples/external_merge_sort_nummap_example.cpp">
+			<Option target="external_merge_sort_nummap"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/examples/external_merge_sort_nummap_example2.cpp">
+			<Option target="external_merge_sort_nummap2"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/examples/serialize_with_sort_example.cpp">
+			<Option target="serialize_with_sort_example"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/examples/string_key_store_example.cpp">
+			<Option target="string_key_store_example"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/ExternalULongKeyComparator.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/ExternalULongKeyComparator.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/ExternalULongPairComparator.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/ExternalULongPairComparator.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/QuicksortComparatorTest.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/QuicksortComparatorTest.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/QuicksortLessComparator.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/QuicksortLessComparatorKeyValue.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/external_merge_sort.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/external_merge_sort.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/external_merge_sort/quicksort.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/KeyValueStore.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/inserter.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/inserter.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/java_utils.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/serializer_with_sort.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/serializer_with_sort.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/virtual_key_value_store.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/virtual_key_value_store.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/virtual_sorter.cpp">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/src/original/virtual_sorter.h">
+			<Option target="libvarsorter"/>
+		</Unit>
+		<Unit filename="/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

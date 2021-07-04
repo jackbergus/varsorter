@@ -28,7 +28,6 @@
 #include <iostream>
 #include <cstring>
 
-#include "new_iovec.h"
 #include "virtual_sorter.h"
 #include "inserter.h"
 

@@ -25,7 +25,6 @@
 #define VARSORTER_QUICKSORTLESSCOMPARATOR_H
 
 #include "../src/original/java_utils.h"
-#include "../src/original/smart_malloc.h"
 #include "external_merge_sort.h"
 
 ABSTRACT_CLASS QuicksortLessComparator {

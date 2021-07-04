@@ -28,17 +28,19 @@
 
 #include <cstdint>
 #include <cstdio>
-#include "index.h"
 #include <string>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <bits/types/struct_iovec.h>
+#include <yaucl/memory/index.h>
+#include <yaucl/memory/new_iovec.h>
+
 
 class inserter {
     inserter(uint_fast64_t fixed_size, bool isFixedSize);
 
-    struct index toSerialize;
+    yaucl::memory::index toSerialize;
     std::string file, index;
     bool hasFixedSizeInput;
     uint_fast64_t fixed_size;
@@ -70,7 +72,7 @@ public:
     void close();
     void dounlink();
 
-    void writeKeyAndValue(struct new_iovec& );
+    void writeKeyAndValue(yaucl::memory:: new_iovec& );
     void writeKeyAndValue(struct iovec& );
     void writeKeyAndValue(void* mem, uint_fast64_t size);
     void risk_writeKeyAndValue_noindex(void* mem, uint_fast64_t size);

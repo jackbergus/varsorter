@@ -32,7 +32,7 @@
 #include <vector>
 #include <queue>
 #include "../src/original/serializer_with_sort.h"
-#include "../src/original/smart_malloc.h"
+#include <yaucl/memory/smart_malloc.h>
 #include "quicksort.h"
 
 struct void_virtual_sorter : public  virtual_sorter {
@@ -109,7 +109,7 @@ template <typename QuicksortComparator> class external_merge_sort {
 
         // allocate a dynamic array large enough
         // to accommodate runs of size run_size
-        std::vector<smart_malloc> arr;
+        std::vector<yaucl::memory::smart_malloc> arr;
         arr.reserve(run_size);
         //int* arr = (int*)malloc(run_size * sizeof(int));
 
@@ -149,7 +149,7 @@ template <typename QuicksortComparator> class external_merge_sort {
         }
 
         // Forcing to free the memory
-        for (smart_malloc& toReset : arr)
+        for (auto& toReset : arr)
             toReset.moved = false;
 
         // close input and output files

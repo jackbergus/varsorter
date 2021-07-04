@@ -5,26 +5,16 @@ set(CMAKE_CXX_STANDARD 17)
 
 ADD_LIBRARY(libvarsorter STATIC
 
-            src/original/mmapFile.cpp
-            src/original/mmapFile.h
             src/original/inserter.cpp
             src/original/inserter.h
-            src/original/index.h
-            src/original/virtual_sorter.cpp
+        src/original/virtual_sorter.cpp
             src/original/virtual_sorter.h
             src/original/serializer_with_sort.cpp
             src/original/serializer_with_sort.h
             src/original/virtual_key_value_store.cpp
             src/original/virtual_key_value_store.h
-            src/original/smart_malloc.cpp
-            src/original/smart_malloc.h
-            src/original/new_iovec.cpp
-            src/original/new_iovec.h
             src/original/java_utils.h
-            src/original/smart_index_pointer.cpp
-            src/original/smart_index_pointer.h
-            src/original/index.cpp
-            external_merge_sort/quicksort.h
+        external_merge_sort/quicksort.h
             external_merge_sort/QuicksortLessComparator.h
             external_merge_sort/QuicksortLessComparatorKeyValue.h
             external_merge_sort/QuicksortComparatorTest.cpp
@@ -35,6 +25,7 @@ ADD_LIBRARY(libvarsorter STATIC
         external_merge_sort/ExternalULongPairComparator.h
             external_merge_sort/external_merge_sort.cpp
             src/KeyValueStore.h )
+target_link_libraries(libvarsorter yaucl_memory yaucl_fs)
 
 set(EXTERNAL_MERGE_SORT_FILES   )
 
@@ -53,8 +44,8 @@ add_executable(external_merge_sort_nummap
 add_executable(external_merge_sort_nummap2
         examples/external_merge_sort_nummap_example2.cpp)
 
-TARGET_LINK_LIBRARIES(serialize_with_sort_example libvarsorter )
-TARGET_LINK_LIBRARIES(string_key_store_example libvarsorter )
-TARGET_LINK_LIBRARIES(external_sorter_example libvarsorter )
-TARGET_LINK_LIBRARIES(external_merge_sort_nummap libvarsorter )
-TARGET_LINK_LIBRARIES(external_merge_sort_nummap2 libvarsorter )
+TARGET_LINK_LIBRARIES(serialize_with_sort_example yaucl_memory yaucl_fs libvarsorter )
+TARGET_LINK_LIBRARIES(string_key_store_example yaucl_memory yaucl_fs libvarsorter )
+TARGET_LINK_LIBRARIES(external_sorter_example yaucl_memory yaucl_fs libvarsorter )
+TARGET_LINK_LIBRARIES(external_merge_sort_nummap yaucl_memory yaucl_fs  libvarsorter )
+TARGET_LINK_LIBRARIES(external_merge_sort_nummap2 yaucl_memory yaucl_fs libvarsorter )

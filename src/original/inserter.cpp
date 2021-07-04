@@ -24,7 +24,8 @@
 
 
 #include "inserter.h"
-#include "new_iovec.h"
+#include <yaucl/memory/new_iovec.h>
+using namespace yaucl::memory;
 
 extern "C" {
 #include <unistd.h>
@@ -104,7 +105,7 @@ void inserter::risk_writeKeyAndValue_noindex(void *mem, uint_fast64_t size) {
     fwrite(mem, size, 1, fdKeyValueStorage);
 }
 
-void inserter::writeKeyAndValue(struct new_iovec &x) {
+void inserter::writeKeyAndValue(yaucl::memory:: new_iovec &x) {
     writeKeyAndValue(x.iov_base, x.iov_len);
 }
 

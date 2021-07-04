@@ -27,7 +27,6 @@ extern "C" {
 #include "examples.h"
 #include "../src/original/java_utils.h"
 #include "../src/original/serializer_with_sort.h"
-#include "../src/original/smart_malloc.h"
 #include "../external_merge_sort/external_merge_sort.h"
 #include "../external_merge_sort/QuicksortComparatorTest.h"
 

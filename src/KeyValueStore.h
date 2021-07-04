@@ -26,6 +26,7 @@
 
 #include <cstdio>
 #include "original/virtual_key_value_store.h"
+#include <yaucl/fs/mmapFile.h>
 
 #define GET_SERIALIZATION_COST(X)           ((sizeof(LONG_NUMERIC)*2)+X)
 

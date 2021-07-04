@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/serialize_with_sort_example.dir/examples/serialize_with_sort_example.cpp.o  -o serialize_with_sort_example  -lyaucl_memory -lyaucl_fs liblibvarsorter.a -lyaucl_memory -lyaucl_fs 

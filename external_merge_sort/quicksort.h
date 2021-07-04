@@ -26,12 +26,12 @@
 
 
 #include <vector>
-#include "../src/original/smart_malloc.h"
+#include <yaucl/memory/smart_malloc.h>
 
 template <typename AQuicksortComparator> struct quicksort {
     AQuicksortComparator lessThan{};
 
-    int partition(std::vector<smart_malloc> &arr, const int left, const int right) {
+    int partition(std::vector<yaucl::memory::smart_malloc> &arr, const int left, const int right) {
         smart_malloc& pivotElement = arr[right];
         uint_fast64_t i = left - 1;
         for (uint_fast64_t j = left; j < right; j++) {
@@ -46,7 +46,7 @@ template <typename AQuicksortComparator> struct quicksort {
         return i+1;
     }
 
-    void do_quicksort(std::vector<smart_malloc> &arr, const int left, const int right) {
+    void do_quicksort(std::vector<yaucl::memory::smart_malloc> &arr, const int left, const int right) {
         if (left < right) {
             uint_fast64_t part = partition(arr, left, right);
             if (part > 0) do_quicksort(arr, left, part - 1);
@@ -54,7 +54,7 @@ template <typename AQuicksortComparator> struct quicksort {
         }
     }
 
-    void do_quicksort(std::vector<smart_malloc>& arr, const int max) {
+    void do_quicksort(std::vector<yaucl::memory::smart_malloc>& arr, const int max) {
         do_quicksort(arr, 0, arr.size()-1);
     }
 };

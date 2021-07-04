@@ -31,7 +31,7 @@
 
 #include "virtual_sorter.h"
 #include "serializer_with_sort.h"
-#include "smart_malloc.h"
+#include <yaucl/memory/smart_malloc.h>
 #include "java_utils.h"
 #include "../../external_merge_sort/external_merge_sort.h"
 
@@ -50,7 +50,7 @@
 class virtual_key_value_store : public virtual_sorter, public serializer_with_sort {
 
 // Destructed by default when destructing the class'object -- freeing the memory
-    smart_malloc malloced;
+    yaucl::memory::smart_malloc malloced;
 
 public:
     virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile);

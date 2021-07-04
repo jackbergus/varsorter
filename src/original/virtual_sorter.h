@@ -26,11 +26,12 @@
 #include <iostream>
 #include <cstring>
 
-#include "mmapFile.h"
-#include "index.h"
+#include <yaucl/fs/mmapFile.h>
+using namespace yaucl::fs;
 #include "java_utils.h"
-#include "smart_index_pointer.h"
-#include "smart_malloc.h"
+#include <yaucl/memory/smart_malloc.h>
+#include <yaucl/memory/smart_index_pointer.h>
+using namespace yaucl::memory;
 
 class virtual_sorter {
 protected:
@@ -41,8 +42,8 @@ protected:
 
     std::string bulkFile, indexFile;
 
-    smart_index_pointer ptr_arr;
-    smart_malloc ptr_mem_tmp;
+    yaucl::memory::smart_index_pointer ptr_arr;
+    yaucl::memory::smart_malloc ptr_mem_tmp;
 
 
     uint_fast64_t partition(const uint_fast64_t left, const uint_fast64_t right);

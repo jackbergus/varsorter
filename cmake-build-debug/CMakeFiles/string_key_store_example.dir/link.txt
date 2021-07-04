@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/string_key_store_example.dir/examples/string_key_store_example.cpp.o  -o string_key_store_example  -lyaucl_memory -lyaucl_fs liblibvarsorter.a -lyaucl_memory -lyaucl_fs 

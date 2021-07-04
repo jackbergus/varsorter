@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/external_sorter_example.dir/examples/external_merge_sort_example.cpp.o  -o external_sorter_example  -lyaucl_memory -lyaucl_fs liblibvarsorter.a -lyaucl_memory -lyaucl_fs 

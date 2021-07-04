@@ -22,6 +22,7 @@
 
 
 #include "virtual_key_value_store.h"
+using namespace yaucl::memory;
 
 virtual_key_value_store::virtual_key_value_store(const std::string &indexFile, const std::string &valuesFile) :
         serializer_with_sort(indexFile, valuesFile), virtual_sorter{} {

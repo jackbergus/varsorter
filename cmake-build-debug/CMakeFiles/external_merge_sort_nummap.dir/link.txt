@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/external_merge_sort_nummap.dir/examples/external_merge_sort_nummap_example.cpp.o  -o external_merge_sort_nummap  -lyaucl_memory -lyaucl_fs liblibvarsorter.a -lyaucl_memory -lyaucl_fs 

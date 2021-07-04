@@ -1,0 +1,8 @@
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/edit_cache.dir
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/external_merge_sort_nummap2.dir
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/external_sorter_example.dir
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/external_merge_sort_nummap.dir
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/string_key_store_example.dir
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/serialize_with_sort_example.dir
+/media/giacomo/Data/elementi/submodules/fuzzyStringMatching/third_party/varsorter/cmake-build-debug/CMakeFiles/libvarsorter.dir

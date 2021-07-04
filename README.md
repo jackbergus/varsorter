@@ -18,5 +18,9 @@ This library was ment to overcome two of the major problems in current C++ libra
 
 This implementation is quite straightforward, and can be refactored and made more efficient as it actually is right now.
 
+## Dependencies
+
+This library requires [yaucl](https://github.com/datagramdb/yaucl): please install it before compile.
+
 ## TODO (?) List:
 1. Some additional unit testing to provide the correctness of the implementation should be provided, too.

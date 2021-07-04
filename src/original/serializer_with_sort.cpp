@@ -23,6 +23,8 @@
 
 
 #include "serializer_with_sort.h"
+#include <yaucl/memory/new_iovec.h>
+using namespace yaucl::memory;
 
 serializer_with_sort::serializer_with_sort(std::string indexFile, std::string valuesFile) : index{indexFile}, values{valuesFile}, c{} {
     fixed_size = 0L;
